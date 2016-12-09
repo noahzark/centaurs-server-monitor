@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>Http tester</title>
+<meta name="viewport" content="width=device-width">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<!-- bootstrap CDN-->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="./public.css">
+
+</head>
+
+<body ng-app="servertool">
+  <div class="panel panel-default" >
+      <div class="panel-heading">Server speed test</div>
+      <div class="panel-body" ng-controller="serverCtrl">
+          You can use this tool to test the servers located in different areas
+        <div ng-repeat="x in servers">
+          <div class="infobox speedtest_infobox">
+              <div>
+                  <button type="button" class="btn btn-danger btn_status_{{ x.code }}" disabled> Running </button>
+                  <h4 class="speedtest_line">
+                    <a href="{{ x.url }}">{{ x.name }}</a>
+                    <small id="speedtest_msg_{{ x.code }}"></small>
+                    <small id="servertest_msg_{{ x.code }}"></small>
+                    <small id="servertest_result_{{ x.code }}"></small>
+                  </h4>
+                  <div class="speedtest_line speedtest_btn">
+                      <div class="btn btn-success " data-code="{{ x.code }}">Start</div>
+                  </div>
+                  <div class="speedtest_line servertest_btn">
+                      <div class="btn btn-info " data-code="{{ x.code }}">Check</div>
+                  </div>
+              </div>
+              <div id="servertest_{{ x.code }}" class="servertest_infobox">
+                <div class="controls-row">
+                  <div class="control-group srv_free_{{ x.code }} col col-sm-4">
+                    <label class="control-label">Service free</label>
+                    <div class="controls readonly">Service free</div>
+                  </div>
+                  <div class="control-group srv_alc_{{ x.code }} col col-sm-4">
+                    <label class="control-label">Service allocated</label>
+                    <div class="controls readonly">Service allocated</div>
+                  </div>
+                  <div class="control-group srv_usg_{{ x.code }} col col-sm-4">
+                    <label class="control-label">Service usage</label>
+                    <div class="controls readonly">Service usage</div>
+                  </div>
+                </div>
+                <div class="controls-row">
+                  <div class="control-group sys_free_{{ x.code }} col col-sm-4">
+                    <label class="control-label">Server free</label>
+                    <div class="controls readonly">Server free</div>
+                  </div>
+                  <div class="control-group sys_sum_{{ x.code }} col col-sm-4">
+                    <label class="control-label">Server total</label>
+                    <div class="controls readonly">Server total</div>
+                  </div>
+                  <div class="control-group sys_usg_{{ x.code }} col col-sm-4">
+                    <label class="control-label">Server usage</label>
+                    <div class="controls readonly">Server usage</div>
+                  </div>
+                </div>
+                &nbsp;
+              </div>
+              <div id="speedtest_progressbar_{{ x.code }}" class="progress speedtest_progressbar">
+                  <div class="  progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                      <span class="sr-only"></span>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- jQuery CDN-->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
+  <!-- Angular CDN-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.7/angular.min.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="./statusview.js"></script>
+  <script src="./speedtest.js"></script>
+  <script src="./servertest.js"></script>
+</body>
+</html>

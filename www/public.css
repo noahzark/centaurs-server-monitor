@@ -1,0 +1,167 @@
+
+/**
+全局CSS
+*/
+html,body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+html,body,h1,h2,h3,h4,h5{
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
+}
+#container {
+    min-height:100%;
+    height: auto !important;
+    height: 100%; /*IE6不识别min-height*/
+    position: relative;
+}
+.infobox,infobox-default{
+    border-width: 1px;
+    border-style: solid;
+    border-color: #FFFFFF;
+    box-shadow: 1px 1px 1px 1px #969A97;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.speedtest_progressbar,
+.servertest_infobox{
+    display: none;
+}
+
+.speedtest_line{
+    display: inline-block;
+}
+
+.speedtest_btn,
+.servertest_btn{
+    float: right;
+    margin-top: 3px;
+    margin-left: 10px;
+}
+
+.img-center{
+    max-width: 100%;
+    padding-bottom:  10px;
+    text-align: center;
+}
+
+.infobox-danger{
+    box-shadow: 1px 1px 1px 1px #E68190;
+}
+
+.infobox-sucess{
+    box-shadow: 1px 1px 1px 1px #337AB7;
+}
+
+.point-box{
+    margin: 3px;
+    width: 10px;
+    height: 10px;
+    background-color: blue;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+.point-sucess{
+    background-color: #33ff00;
+}
+
+.point-danger{
+    background-color: red;
+}
+
+.header_nav_logo{
+    padding-top: 10px;
+    padding-left: 0px;
+}
+.header_nav_logo > img{
+    height: 30px;
+}
+
+#login_title,#reg_title{
+    text-align: center;
+}
+#header {
+    padding: 20px;
+}
+#footer {
+    background-color: aliceblue;
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    clear: both;
+}
+
+.toptitle{
+    text-align: center;
+    font-size: 24px;
+    border-bottom-style: inset;
+    border-bottom-color: #c5c5c3;
+    margin-bottom: 10px;
+    border-bottom-width: 2px;
+}
+
+#nav{
+    box-shadow: 5px 10px 15px 5px rgba(0,0,0,.1);
+    background-color: aliceblue;
+}
+
+.box-base{}
+.box-center{}
+#login-box{}
+#reg-box{}
+
+/*移动设备*/
+@media(min-width: 300px){
+
+}
+
+/*台式机与平板设备*/
+@media(min-width: 868px){
+    .box-base{
+        border-width: 1px;
+        border-style: solid;
+        border-color: #e7e7e7;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 15px;
+        box-shadow: 5px 5px 3px 5px rgba(0,0,0,.1);
+    }
+
+    .container{
+        max-width: 860px;
+    }
+
+    .box-center{
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 70px;
+    }
+
+    /*登录页*/
+    #login_box{
+        width: 440px;
+        height: 380px;
+    }
+    /*注册*/
+    #reg_box{
+        width: 440px;
+        height: 680px;
+    }
+
+    /*密码找回*/
+    #found_box{
+        width: 440px;
+        height: 380px;
+    }
+}
