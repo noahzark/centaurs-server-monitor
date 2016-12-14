@@ -1,5 +1,5 @@
 // Dropdown boxes
-var host = window.location.hostname;
+var host = window.location.hostname + (location.port ? ':' + location.port : '')
 var server = [
   {name:'Host', url:'http://' + host, speed_api:'', code:'host', fold:false},
 ]
