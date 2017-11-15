@@ -7,6 +7,13 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     port = process.env.PORT || 10021
 
+var mongo = require('mongodb'),
+    mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/monitor', {
+    useMongoClient: true,
+});
+var db = mongoose.connection;
+
 app.set('port', port);
 
 app.use('/', express.static(__dirname + '/www'))
@@ -57,7 +64,7 @@ app.post('/api/gm/server-info/', function (req, res, err) {
 app.post('/api/gm/test-info/', function (req, res, err) {
     try {
         if (!req.body) return res.sendStatus(400)
-        
+
         var info = req.body;
         console.log(info);
         res_obj = {};
