@@ -1,6 +1,13 @@
+/**
+ * @file centaurs-server-monitor: System Log Schema
+ * @copyright Centaurs Technologies Co. 2017
+ * @author Zhang, Yuancheng
+ * @license Unlicense
+ * @module models/syslog
+ */
+
 var mongoose = require('mongoose');
 
-// System Log Schema
 var SysLogSchema = mongoose.Schema({
 	app_name: {
         type: String,

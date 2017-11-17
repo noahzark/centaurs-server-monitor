@@ -1,3 +1,11 @@
+/**
+ * @file centaurs-server-monitor: Log services
+ * @copyright Centaurs Technologies Co. 2017
+ * @author Zhang, Yuancheng
+ * @license Unlicense
+ * @module services/log
+ */
+
 var SysLog = require('../models/syslog'),
 	TestLog = require('../models/testlog');
 

@@ -1,3 +1,11 @@
+/**
+ * @file centaurs-server-monitor: main functions
+ * @copyright Centaurs Technologies Co. 2017
+ * @author Feliciano.Long & Zhang, Yuancheng
+ * @license Unlicense
+ * @module app
+ */
+
 var express = require('express'),
     app = express(),
     router = express.Router(),

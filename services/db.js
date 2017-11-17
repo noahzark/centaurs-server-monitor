@@ -1,7 +1,18 @@
-// Database
+/**
+ * @file centaurs-server-monitor: database services
+ * @copyright Centaurs Technologies Co. 2017
+ * @author Zhang, Yuancheng
+ * @license Unlicense
+ * @module services/db
+ */
+
 var mongo = require('mongodb'),
 	mongoose = require('mongoose');
 
+/**
+ * connect to db
+ * @param {Object} opts - db config
+ */
 module.exports.connect = function (opts) {
 	if (!opts) {
 		console.log(`[MongoDB][ERR] These is no database config opts. Connect failed.`);

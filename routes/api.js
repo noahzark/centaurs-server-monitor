@@ -1,8 +1,16 @@
+/**
+ * @file centaurs-server-monitor: API routes
+ * @copyright Centaurs Technologies Co. 2017
+ * @author Feliciano.Long & Zhang, Yuancheng
+ * @license Unlicense
+ * @module routes/api
+ */
+
 var express = require('express');
 var router = express.Router();
 var LogService = require('../services/log');
 var os = require('os'),
-util = require('util');
+	util = require('util');
 
 
 router.get('/server', function (req, res) {
