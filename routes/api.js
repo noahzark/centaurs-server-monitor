@@ -36,14 +36,21 @@ router.get('/server', function (req, res) {
 
 router.post('/server-info', function (req, res, err) {
 	try {
-		if (!req.body) return res.sendStatus(400)
-
+		if (!req.body) {
+			return res.sendStatus(400);
+		}
 		var info = req.body;
-		console.log(info);
-		res_obj = {};
-		res_obj.retcode = 0;
-		res_obj.msg = "success"
-		res.send(JSON.stringify(res_obj));
+		console.log(`[Receive][Sys] ${JSON.stringify(info)}`);
+		LogService.addSysLog(info, (err) => {
+			res_obj = {};
+			if (err) {
+				console.log(`[MongoDB][ERR] ${err}`);
+			} else {
+				res_obj.retcode = 0;
+				res_obj.msg = "success";
+				res.send(JSON.stringify(res_obj));
+			}
+		});
 	} catch (err) {
 		console.error(err);
 		res_obj = {};
@@ -55,16 +62,18 @@ router.post('/server-info', function (req, res, err) {
 
 router.post('/test-info', function (req, res, err) {
 	try {
-		if (!req.body) return res.sendStatus(400)
+		if (!req.body) {
+			return res.sendStatus(400);
+		}
 		var info = req.body;
-		console.log(info);
+		console.log(`[Receive][Test] ${JSON.stringify(info)}`);
 		LogService.addTestLog(info, (err) => {
-			res_obj = {};		
+			res_obj = {};
 			if (err) {
-				console.log(err);
+				console.log(`[MongoDB][ERR] ${err}`);
 			} else {
 				res_obj.retcode = 0;
-				res_obj.msg = "success"
+				res_obj.msg = "success";
 				res.send(JSON.stringify(res_obj));
 			}
 		})
