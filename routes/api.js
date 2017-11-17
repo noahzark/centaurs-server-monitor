@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var LogService = require('../services/log');
+var os = require('os'),
+util = require('util');
+
 
 router.get('/server', function (req, res) {
 	var memUsage = util.inspect(process.memoryUsage()) + ''
@@ -23,7 +26,7 @@ router.get('/server', function (req, res) {
 	res.send(JSON.stringify(info))
 })
 
-router.post('/server-info/', function (req, res, err) {
+router.post('/server-info', function (req, res, err) {
 	try {
 		if (!req.body) return res.sendStatus(400)
 
@@ -42,7 +45,7 @@ router.post('/server-info/', function (req, res, err) {
 	}
 });
 
-router.post('/test-info/', function (req, res, err) {
+router.post('/test-info', function (req, res, err) {
 	try {
 		if (!req.body) return res.sendStatus(400)
 		var info = req.body;

@@ -1,5 +1,3 @@
-var os = require('os'),
-    util = require('util');
 
 var express = require('express'),
     app = express(),
@@ -25,10 +23,12 @@ var route_html = require('./routes/api');
 // Config
 app.set('port', port);
 
-app.use('/', express.static(__dirname + '/www'))
+app.use(bodyParser.json())
+
+app.use('/', express.static(__dirname + '/www'));
 app.use('/api/gm/', route_api);
 
-app.use(bodyParser.json())
+
 
 server.listen(port, function () {
     console.log('Server started at ' + port);
