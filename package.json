@@ -5,7 +5,7 @@
     "main": "app.js",
     "dependencies": {
         "body-parser": "1.15.x",
-        "express": "^4.14.1",
+        "express": "^4.16.2",
         "mongodb": "^2.2.33",
         "mongoose": "^4.13.3"
     },
@@ -26,20 +26,20 @@
         "plugin",
         "插件",
         "监控"
-      ],
-      "author": {
+    ],
+    "author": {
         "name": "Centaurs Technologies Co.",
         "email": "contanct@qiwu.ai",
         "url": "https://www.centaurstech.com/"
-      },
-      "contributors": [
+    },
+    "contributors": [
         {
-          "name": "Fangzhou Long",
-          "nickname": "Feli"
+            "name": "Fangzhou Long",
+            "nickname": "Feli"
         },
         {
-          "name": "Yuancheng Zhang",
-          "nickname": "endaye"
+            "name": "Yuancheng Zhang",
+            "nickname": "endaye"
         }
-      ]
+    ]
 }
