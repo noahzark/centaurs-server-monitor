@@ -16,6 +16,10 @@ mongoose.connect('mongodb://localhost/qw-monitor', {
 
 var db = mongoose.connection;
 
+// db connection test
+var db_state = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+console.log(`MongoDB state: ${db_state[mongoose.connection.readyState]}`);
+
 // Routers
 var route_api = require('./routes/api');
 var route_html = require('./routes/api');
