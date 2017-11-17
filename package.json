@@ -17,5 +17,29 @@
         "type": "git",
         "url": "https://github.com/noahzark/centaurs-server-monitor/"
     },
-    "license": "UNLICENSED"
+    "license": "UNLICENSED",
+    "keywords": [
+        "centaurs",
+        "server",
+        "monitor",
+        "人马互动",
+        "plugin",
+        "插件",
+        "监控"
+      ],
+      "author": {
+        "name": "Centaurs Technologies Co.",
+        "email": "contanct@qiwu.ai",
+        "url": "https://www.centaurstech.com/"
+      },
+      "contributors": [
+        {
+          "name": "Fangzhou Long",
+          "nickname": "Feli"
+        },
+        {
+          "name": "Yuancheng Zhang",
+          "nickname": "endaye"
+        }
+      ]
 }
