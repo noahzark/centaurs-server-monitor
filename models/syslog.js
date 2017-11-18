@@ -12,6 +12,9 @@ var SysLogSchema = mongoose.Schema({
 	app_name: {
         type: String,
     },
+    time: {
+        type: String
+    },
     srv_alc: {
         type: Number
     },

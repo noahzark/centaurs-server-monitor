@@ -10,7 +10,10 @@ var mongoose = require('mongoose');
 
 var TestLogSchema = mongoose.Schema({
 	app_name: {
-        type: String,
+        type: String
+    },
+    time: {
+        type: String
     },
     retcode: {
         type: Number
