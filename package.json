@@ -10,8 +10,8 @@
         "mongoose": "^4.13.3"
     },
     "engines": {
-        "node": "0.12.x",
-        "npm": "1.2.x"
+        "node": "8.9.x",
+        "npm": "5.5.x"
     },
     "repository": {
         "type": "git",
