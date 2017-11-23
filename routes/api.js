@@ -6,12 +6,27 @@
  * @module routes/api
  */
 
-var express = require('express');
-var router = express.Router();
-var LogService = require('../services/log');
-var os = require('os'),
-	util = require('util');
+var express = require('express'),
+	router = express.Router(),
+	LogService = require('../services/log'),
+	os = require('os'),
+	util = require('util'),
+	app_check_time_list = {},	// app_name : next_time
+	TIME_INTERVAL_LIMIT = 10 * 1000;		// ms
 
+
+var sysCheckTime = function (time) {
+	setInterval(() => {
+		var now = Date.now();
+		for (const app_name in app_check_time_list) {
+			if (app_name && now - app_check_time_list[app_name] > TIME_INTERVAL_LIMIT) {
+				console.log(`${app_name} is offline at ${app_check_time_list[app_name]}`);
+			}
+		}
+	}, 1000);
+}
+
+sysCheckTime();
 
 router.get('/server', function (req, res) {
 	var memUsage = util.inspect(process.memoryUsage()) + ''
@@ -41,7 +56,10 @@ router.post('/server-info', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Sys] ${JSON.stringify(info)}`);
+		
 		LogService.addSysLog(info, (err) => {
+			app_check_time_list[info.app_name] = info.next_time;
+
 			res_obj = {};
 			if (err) {
 				console.log(`[MongoDB][ERR] ${err}`);
@@ -51,6 +69,7 @@ router.post('/server-info', function (req, res, err) {
 				res.send(JSON.stringify(res_obj));
 			}
 		});
+
 	} catch (err) {
 		console.error(err);
 		res_obj = {};
@@ -59,6 +78,8 @@ router.post('/server-info', function (req, res, err) {
 		res.send(JSON.stringify(res_obj));
 	}
 });
+
+
 
 router.post('/test-info', function (req, res, err) {
 	try {
