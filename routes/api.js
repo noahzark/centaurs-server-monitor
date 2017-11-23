@@ -12,18 +12,24 @@ var express = require('express'),
 	os = require('os'),
 	util = require('util'),
 	app_check_time_list = {},	// app_name : next_time
+	app_check_interval = 1000,			// ms
 	TIME_INTERVAL_LIMIT = 10 * 1000;		// ms
 
+var EmailClient = require('../services/email'),
+	mode = process.env.NODE_ENV,
+	emailClient = new EmailClient(mode);
 
-var sysCheckTime = function (time) {
+
+var sysCheckTime = function (app_check_interval) {
 	setInterval(() => {
 		var now = Date.now();
 		for (const app_name in app_check_time_list) {
 			if (app_name && now - app_check_time_list[app_name] > TIME_INTERVAL_LIMIT) {
 				console.log(`${app_name} is offline at ${app_check_time_list[app_name]}`);
+				emailClient.emailLog('API Server Error', `${app_name} is offline at ${app_check_time_list[app_name]}`);				
 			}
 		}
-	}, 1000);
+	}, app_check_interval);
 }
 
 sysCheckTime();
