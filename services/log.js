@@ -8,7 +8,8 @@
 
 var SysLog = require('../models/syslog'),
 	TestLog = require('../models/testlog'),
-	ErrLog = require('../models/errlog');
+    ErrLog = require('../models/errlog'),
+    UsageLog = require('../models/usagelog');
 
 /**
  * add system info log into db
@@ -37,5 +38,15 @@ module.exports.addTestLog = function (log, callback) {
  */
 module.exports.addErrLog = function (log, callback) {
 	var log_ins = new ErrLog(log);
+	log_ins.save(callback);
+}
+
+/**
+ * add api time usage log into db
+ * @param {Object} log - test log from route
+ * @param {Function} callback 
+ */
+module.exports.addUsageLog = function (log, callback) {
+	var log_ins = new UsageLog(log);
 	log_ins.save(callback);
 }
