@@ -86,3 +86,6 @@ $RECYCLE.BIN/
 
 # package-lock.json
 package-lock.json
+
+# configuration files
+config/
