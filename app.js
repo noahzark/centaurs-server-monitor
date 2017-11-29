@@ -1,34 +1,40 @@
-var os = require('os'),
-    util = require('util')
+/**
+ * @file centaurs-server-monitor: main functions
+ * @copyright Centaurs Technologies Co. 2017
+ * @author Feliciano.Long & Zhang, Yuancheng
+ * @license Unlicense
+ * @module app
+ */
 
 var express = require('express'),
     app = express(),
+    router = express.Router(),
     server = require('http').createServer(app),
-    bodyParser = require('body-parser')
+    bodyParser = require('body-parser'),
+    port = process.env.PORT || 10021;
 
-app.use('/', express.static(__dirname + '/www'))
+// database
+var db = require('./services/db'),
+    db_config = {
+        server: 'localhost',
+        port: 27017,
+        db: 'qw-monitor'
+    };
+
+db.connect(db_config);
+
+// Routers
+var route_api = require('./routes/api');
+var route_html = require('./routes/api');
+
+// Config
+app.set('port', port);
 
 app.use(bodyParser.json())
 
-app.get('/api/gm/server', function(req, res) {
-    var memUsage = util.inspect(process.memoryUsage()) + ''
-    
-    var memStrs = memUsage.split(',')
+app.use('/', express.static(__dirname + '/www'));
+app.use('/api/gm/', route_api);
 
-    var info = {}
-
-    var str = memStrs[0];
-    info.srv_alc = (parseInt(str.substring(str.indexOf(":")+1)) / 1024).toFixed()
-    info.srv_free = (info.srv_alc - parseInt(memStrs[2].substring(memStrs[2].indexOf(':')+1)) / 1024).toFixed()
-    
-    info.sys_free = (os.freemem()/1024).toFixed()
-    info.sys_sum = (os.totalmem()/1024).toFixed()
-
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Content-Type", "application/json;charset=UTF-8");
-
-    res.send(JSON.stringify(info))
+server.listen(port, function () {
+    console.log('Server started at ' + port);
 })
-
-server.listen(80, '0.0.0.0')

@@ -83,4 +83,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# package-lock.json
 package-lock.json
+
+# configuration files
+config/

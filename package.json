@@ -4,16 +4,44 @@
     "version": "0.1.0",
     "main": "app.js",
     "dependencies": {
-        "express": "4.14.x",
-        "body-parser": "1.15.x"
+        "body-parser": "1.15.x",
+        "config": "^1.28.1",
+        "express": "^4.16.2",
+        "mongodb": "^2.2.33",
+        "mongoose": "^4.13.3",
+        "nodemailer": "^4.4.0"
     },
     "engines": {
-        "node": "0.12.x",
-        "npm": "1.2.x"
+        "node": "8.9.x",
+        "npm": "5.5.x"
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/noahzark/centaurs-server-monitor/"
     },
-    "license": "UNLICENSED"
+    "license": "UNLICENSED",
+    "keywords": [
+        "centaurs",
+        "server",
+        "monitor",
+        "人马互动",
+        "plugin",
+        "插件",
+        "监控"
+    ],
+    "author": {
+        "name": "Centaurs Technologies Co.",
+        "email": "contanct@qiwu.ai",
+        "url": "https://www.centaurstech.com/"
+    },
+    "contributors": [
+        {
+            "name": "Fangzhou Long",
+            "nickname": "Feli"
+        },
+        {
+            "name": "Yuancheng Zhang",
+            "nickname": "endaye"
+        }
+    ]
 }
