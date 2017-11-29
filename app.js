@@ -11,17 +11,11 @@ var express = require('express'),
     router = express.Router(),
     server = require('http').createServer(app),
     bodyParser = require('body-parser'),
-    port = process.env.PORT || 10021;
+    port = process.env.PORT || 10021,
+    db = require('./services/db');
 
-// database
-var db = require('./services/db'),
-    db_config = {
-        server: 'localhost',
-        port: 27017,
-        db: 'qw-monitor'
-    };
-
-db.connect(db_config);
+// Database
+db.connect();
 
 // Routers
 var route_api = require('./routes/api');
