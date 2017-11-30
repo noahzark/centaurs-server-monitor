@@ -1,3 +1,3 @@
 git pull
 npm install
-forever --uid "status-server" -a start app.js
+export NODE_ENV=production forever --uid "status-server" -a start app.js
