@@ -32,8 +32,9 @@ var sysCheckTime = function (app_check_interval) {
 		var now = Date.now();
 		for (const app_name in app_check_time_list) {
 			if (app_name && now - app_check_time_list[app_name] > time_interval_limit) {
-				console.log(`[Send][Alert][Email] ${app_name} is offline at ${(new Date(app_check_time_list[app_name])).toString()}(${app_check_time_list[app_name]})`);
-				emailClient.emailLog(`[API Server Error] ${app_name}`, `${app_name} is offline at ${(new Date(app_check_time_list[app_name])).toString()}`);
+				var time = new Date(app_check_time_list[app_name]);
+				console.log(`[Send][Alert][Email] ${app_name} is offline at ${time.toString()}(${app_check_time_list[app_name]})`);
+				emailClient.emailLog(`[API Server Error] ${app_name}`, `${app_name} is offline at ${time.toString()}`);
 				delete app_check_time_list[app_name];
 			}
 		}
