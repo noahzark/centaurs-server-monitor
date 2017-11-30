@@ -55,8 +55,8 @@ EmailClient.prototype.emailLog = function(title, content, cb, fcb) {
 
     // setup e-mail data with unicode symbols
     var mailOptions = {
-        from: '"API Server" <server@centaurstech.com>', // sender address
-        to: 'server@centaurstech.com', // list of receivers
+        from: '"API Server" <monitor@qiwu.ai>', // sender address
+        to: 'monitor@qiwu.ai', // list of receivers
         subject: title, // Subject line
         //text: content, // plaintext body
         html: content // html body
