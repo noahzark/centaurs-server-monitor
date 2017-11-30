@@ -11,22 +11,29 @@ var express = require('express'),
 	LogService = require('../services/log'),
 	os = require('os'),
 	util = require('util'),
+	config = require('config'),
 	app_check_time_list = {},	// app_name : next_time
-	app_check_interval = 1000,			// ms
-	TIME_INTERVAL_LIMIT = 10 * 1000;		// ms
+	app_check_interval = 1 * 1000,			// 1 ms dev default
+	time_interval_limit = 10 * 1000;		// 10 ms dev default
 
 var EmailClient = require('../services/email'),
 	mode = process.env.NODE_ENV,
 	emailClient = new EmailClient(mode);
 
+if (config.has('app_check_interval')) {
+	app_check_interval = config.get('app_check_interval');
+}
+if (config.has('time_interval_limit')) {
+	time_interval_limit = config.get('time_interval_limit');
+}
 
 var sysCheckTime = function (app_check_interval) {
 	setInterval(() => {
 		var now = Date.now();
 		for (const app_name in app_check_time_list) {
-			if (app_name && now - app_check_time_list[app_name] > TIME_INTERVAL_LIMIT) {
+			if (app_name && now - app_check_time_list[app_name] > time_interval_limit) {
 				console.log(`${app_name} is offline at ${app_check_time_list[app_name]}`);
-				emailClient.emailLog('API Server Error', `${app_name} is offline at ${app_check_time_list[app_name]}`);				
+				emailClient.emailLog('API Server Error', `${app_name} is offline at ${app_check_time_list[app_name]}`);
 			}
 		}
 	}, app_check_interval);
@@ -62,7 +69,7 @@ router.post('/server-info', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Sys] ${JSON.stringify(info)}`);
-		
+
 		LogService.addSysLog(info, (err) => {
 			app_check_time_list[info.app_name] = info.next_time;
 
@@ -139,30 +146,30 @@ router.post('/catch-err', function (req, res, err) {
 	}
 });
 
-router.post('/api-time', function(req, res, err) {
-    try {
-        if (!req.body) {
-            return res.sendStatus(400);
-        }
-        var info = req.body;
-        console.log(`[Receive][Time] ${JSON.stringify(info)}`);
-        UsageService.addUsageLog(info, (err) => {
-            res_obj = {};
-            if (err) {
-                console.log(`[MongoDB][ERR] ${err}`);
-            } else {
-                res_obj.retcode = 0;
-                res_obj.msg = "success";
-                res.send(JSON.stringify(res_obj));
-            }
-        })
-    } catch (err) {
-        console.error(err);
-        res_obj = {};
-        res_obj.retcode = 1;
-        res_obj.msg = "request error"
-        res.send(JSON.stringify(res_obj));
-    }
+router.post('/api-time', function (req, res, err) {
+	try {
+		if (!req.body) {
+			return res.sendStatus(400);
+		}
+		var info = req.body;
+		console.log(`[Receive][Time] ${JSON.stringify(info)}`);
+		UsageService.addUsageLog(info, (err) => {
+			res_obj = {};
+			if (err) {
+				console.log(`[MongoDB][ERR] ${err}`);
+			} else {
+				res_obj.retcode = 0;
+				res_obj.msg = "success";
+				res.send(JSON.stringify(res_obj));
+			}
+		})
+	} catch (err) {
+		console.error(err);
+		res_obj = {};
+		res_obj.retcode = 1;
+		res_obj.msg = "request error"
+		res.send(JSON.stringify(res_obj));
+	}
 });
 
 module.exports = router;
