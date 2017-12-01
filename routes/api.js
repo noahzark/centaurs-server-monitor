@@ -155,7 +155,7 @@ router.post('/api-time', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Time] ${JSON.stringify(info)}`);
-		UsageService.addUsageLog(info, (err) => {
+		LogService.addUsageLog(info, (err) => {
 			res_obj = {};
 			if (err) {
 				console.log(`[MongoDB][ERR] ${err}`);
