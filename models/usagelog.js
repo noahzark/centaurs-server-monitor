@@ -12,11 +12,17 @@ var UsageLogSchema = mongoose.Schema({
 	app_name: {
         type: String
     },
-    func_name: {
+    api_path: {
         type: String
     },
     time: {
-        type: String
+        type: Number
+    },
+    start: {
+        type: Number
+    },
+    stop: {
+        type: Number
     }
 }, {
     timestamps: true
