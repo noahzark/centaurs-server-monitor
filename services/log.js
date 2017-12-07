@@ -22,6 +22,20 @@ module.exports.addSysLog = function (log, callback) {
 }
 
 /**
+ * get app sys log from db
+ * @param {string} app_name 
+ * @param {number} limit 
+ * @param {function} callback 
+ */
+module.exports.getSysLog = (app_name, limit, callback) => {
+	if (app_name) {
+		var query = { 'app_name': app_name };
+		var sort = { 'createdAt': -1 };
+		SysLog.find(query).sort(sort).limit(limit).exec(callback);
+	}
+}
+
+/**
  * add test result log into db
  * @param {Object} log - test log from route
  * @param {Function} callback 

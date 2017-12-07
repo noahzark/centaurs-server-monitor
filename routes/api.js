@@ -12,6 +12,7 @@ var express = require('express'),
 	os = require('os'),
 	util = require('util'),
 	config = require('config'),
+	app_list = [],
 	app_check_time_list = {},	// app_name : next_time
 	app_check_interval = 1 * 1000,			// 1 ms dev default
 	time_interval_limit = 10 * 1000;		// 10 ms dev default
@@ -64,6 +65,19 @@ router.get('/server', function (req, res) {
 	res.send(JSON.stringify(info))
 })
 
+router.get('/server2', (req, res) => {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header("Content-Type", "application/json;charset=UTF-8");
+	
+	console.log(app_list);
+	LogService.getSysLog(app_list[0], 5, (err, log)=>{
+		console.log(log);
+	});
+
+	res.send(JSON.stringify(app_list))
+});
+
 router.post('/server-info', function (req, res, err) {
 	try {
 		if (!req.body) {
@@ -71,7 +85,9 @@ router.post('/server-info', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Sys] ${JSON.stringify(info)}`);
-
+		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
+			app_list.push(info.app_name);
+		}
 		LogService.addSysLog(info, (err) => {
 			app_check_time_list[info.app_name] = info.next_time;
 
@@ -101,6 +117,9 @@ router.post('/test-info', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Test] ${JSON.stringify(info)}`);
+		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
+			app_list.push(info.app_name);
+		}
 		LogService.addTestLog(info, (err) => {
 			res_obj = {};
 			if (err) {
@@ -127,6 +146,9 @@ router.post('/catch-err', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Err] ${JSON.stringify(info)}`);
+		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
+			app_list.push(info.app_name);
+		}
 		LogService.addErrLog(info, (err) => {
 			res_obj = {};
 			if (err) {
@@ -153,6 +175,9 @@ router.post('/api-time', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Time] ${JSON.stringify(info)}`);
+		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
+			app_list.push(info.app_name);
+		}
 		LogService.addUsageLog(info, (err) => {
 			res_obj = {};
 			if (err) {
