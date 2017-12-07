@@ -94,8 +94,6 @@ router.post('/server-info', function (req, res, err) {
 	}
 });
 
-
-
 router.post('/test-info', function (req, res, err) {
 	try {
 		if (!req.body) {
