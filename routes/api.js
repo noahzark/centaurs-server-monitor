@@ -66,16 +66,44 @@ router.get('/server', function (req, res) {
 })
 
 router.get('/server2', (req, res) => {
+	if (app_list.length < 1) {
+		res_obj.retcode = 2;
+		res_obj.msg = "app list is empty"
+		res.send(JSON.stringify(res_obj));
+	}
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
-	
-	console.log(app_list);
-	LogService.getSysLog(app_list[0], 5, (err, log)=>{
-		console.log(log);
-	});
+	try {
+		LogService.getSysLog(app_list[0], 10, (err, logs) => {
+			var res_obj = {},
+				data = []
+			if (err) {
+				console.log(`[MongoDB][ERR] ${err}`);
+			} else {
+				for (var i = 0; i < logs.length; i++) {
+					var tmp = {};
+					tmp.time = logs[i].createdAt;
+					tmp.srv_alc = logs[i].srv_alc;
+					tmp.srv_free = logs[i].srv_free;
+					tmp.sys_free = logs[i].sys_free;
+					tmp.sys_sum = logs[i].sys_sum;
+					data.push(tmp);
+				}
+				res_obj.retcode = 0;
+				res_obj.msg = "success";
+				res_obj.data = data;
+				res.send(JSON.stringify(res_obj));
+			}
+		});
+	} catch (err) {
+		console.error(err);
+		var res_obj = {};
+		res_obj.retcode = 1;
+		res_obj.msg = "request error"
+		res.send(JSON.stringify(res_obj));
+	}
 
-	res.send(JSON.stringify(app_list))
 });
 
 router.post('/server-info', function (req, res, err) {
