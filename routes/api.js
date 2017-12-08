@@ -90,8 +90,7 @@ router.post('/server-info', function (req, res, err) {
 		}
 		LogService.addSysLog(info, (err) => {
 			app_check_time_list[info.app_name] = info.next_time;
-
-			res_obj = {};
+			var res_obj = {};
 			if (err) {
 				console.log(`[MongoDB][ERR] ${err}`);
 			} else {
@@ -103,7 +102,7 @@ router.post('/server-info', function (req, res, err) {
 
 	} catch (err) {
 		console.error(err);
-		res_obj = {};
+		var res_obj = {};
 		res_obj.retcode = 1;
 		res_obj.msg = "request error"
 		res.send(JSON.stringify(res_obj));
@@ -121,7 +120,7 @@ router.post('/test-info', function (req, res, err) {
 			app_list.push(info.app_name);
 		}
 		LogService.addTestLog(info, (err) => {
-			res_obj = {};
+			var res_obj = {};
 			if (err) {
 				console.log(`[MongoDB][ERR] ${err}`);
 			} else {
@@ -132,7 +131,7 @@ router.post('/test-info', function (req, res, err) {
 		})
 	} catch (err) {
 		console.error(err);
-		res_obj = {};
+		var res_obj = {};
 		res_obj.retcode = 1;
 		res_obj.msg = "request error"
 		res.send(JSON.stringify(res_obj));
@@ -150,7 +149,7 @@ router.post('/catch-err', function (req, res, err) {
 			app_list.push(info.app_name);
 		}
 		LogService.addErrLog(info, (err) => {
-			res_obj = {};
+			var res_obj = {};
 			if (err) {
 				console.log(`[MongoDB][ERR] ${err}`);
 			} else {
@@ -161,7 +160,7 @@ router.post('/catch-err', function (req, res, err) {
 		});
 	} catch (err) {
 		console.error(err);
-		res_obj = {};
+		var res_obj = {};
 		res_obj.retcode = 1;
 		res_obj.msg = "request error"
 		res.send(JSON.stringify(res_obj));
@@ -179,7 +178,7 @@ router.post('/api-time', function (req, res, err) {
 			app_list.push(info.app_name);
 		}
 		LogService.addUsageLog(info, (err) => {
-			res_obj = {};
+			var res_obj = {};
 			if (err) {
 				console.log(`[MongoDB][ERR] ${err}`);
 			} else {
@@ -190,7 +189,7 @@ router.post('/api-time', function (req, res, err) {
 		})
 	} catch (err) {
 		console.error(err);
-		res_obj = {};
+		var res_obj = {};
 		res_obj.retcode = 1;
 		res_obj.msg = "request error"
 		res.send(JSON.stringify(res_obj));
