@@ -66,6 +66,7 @@ router.get('/server', function (req, res) {
 })
 
 router.get('/server2', (req, res) => {
+	var res_obj = {};
 	if (app_list.length < 1) {
 		res_obj.retcode = 2;
 		res_obj.msg = "app list is empty"
@@ -76,8 +77,7 @@ router.get('/server2', (req, res) => {
 	res.header("Content-Type", "application/json;charset=UTF-8");
 	try {
 		LogService.getSysLog(app_list[0], 10, (err, logs) => {
-			var res_obj = {},
-				data = []
+			var data = []
 			if (err) {
 				console.log(`[MongoDB][ERR] ${err}`);
 			} else {
@@ -98,7 +98,7 @@ router.get('/server2', (req, res) => {
 		});
 	} catch (err) {
 		console.error(err);
-		var res_obj = {};
+		res_obj = {};
 		res_obj.retcode = 1;
 		res_obj.msg = "request error"
 		res.send(JSON.stringify(res_obj));
