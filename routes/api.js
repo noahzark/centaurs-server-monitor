@@ -65,6 +65,22 @@ router.get('/server', function (req, res) {
 	res.send(JSON.stringify(info))
 })
 
+router.get('/server/applist', (req, res) => {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header("Content-Type", "application/json;charset=UTF-8");
+	var res_obj = {};	
+	if (app_list.length < 1) {
+		res_obj.retcode = 2;
+		res_obj.msg = "app list is empty"
+	} else {
+		res_obj.retcode = 0;
+		res_obj.msg = "success";
+		res_obj.data = app_list;
+	}
+	res.send(JSON.stringify(res_obj));
+}) 
+
 router.get('/server2', (req, res) => {
 	var res_obj = {};
 	if (app_list.length < 1) {
