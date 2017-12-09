@@ -1,82 +1,110 @@
 <!DOCTYPE html>
-<svg width="960" height="500"></svg>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script>
+<html lang="en">
 
-	var data = [
-		{
-			date: 1,
-			close: 93.24
-		},
-		{
-			date: 2,
-			close: 73.24
-		},
-		{
-			date: 3,
-			close: 33.24
-		},
-		{
-			date: 4,
-			close: 73.24
-		},
-		{
-			date: 5,
-			close: 63.24
-		},
-		{
-			date: 6,
-			close: 53.24
-		},
-		{
-			date: 7,
-			close: 23.24
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="服务器 - 监控">
+	<meta name="author" content="人马互动科技有限公司">
+
+	<title>服务器 - 监控</title>
+
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+	<!-- Boostrap compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	 crossorigin="anonymous">
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<style>
+		#container {
+			margin: 40px;
 		}
-	]
-	var svg = d3.select("svg"),
-		margin = { top: 20, right: 20, bottom: 30, left: 50 },
-		width = +svg.attr("width") - margin.left - margin.right,
-		height = +svg.attr("height") - margin.top - margin.bottom,
-		g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	</style>
+</head>
 
-	var parseTime = d3.timeParse("%d-%b-%y");
+<body>
+	<div id="container">
+		<div class="page-header">
+			<h1>服务器 - 监控</h1>
+		</div>
 
-	var x = d3.scaleTime()
-		.rangeRound([0, width]);
+		<div class="info">
+			<div class="page-header">
+				<h3 data-toggle="collapse" data-target="#a">joke-api</h3>
+			</div>
+			<div id="a" class="collapse">
+				<div>
 
-	var y = d3.scaleLinear()
-		.rangeRound([height, 0]);
+				</div>
+				<label for="joke-api_sys_usage">服务内存用量</label>
+				<div class="progress" id="joke-api_sys_usage">
+					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+						60%
+					</div>
+				</div>
+				<label for="joke-api_sys_usage">服务器内存用量</label>
+				<div class="progress" id="joke-api_sys_usage">
+					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+						60%
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	var line = d3.line()
-		.x(function (d) { return x(d.date); })
-		.y(function (d) { return y(d.close); });
 
-	x.domain(d3.extent(data, function (d) { return d.date; }));
-	y.domain(d3.extent(data, function (d) { return d.close; }));
+	<!-- jQuery v3.2.1 -->
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	 crossorigin="anonymous"></script>
+	<!-- Boostrap compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	 crossorigin="anonymous"></script>
 
-	g.append("g")
-		.attr("transform", "translate(0," + height + ")")
-		.call(d3.axisBottom(x))
-		.select(".domain")
-		.remove();
+	<script>
+		var applist = [];
 
-	g.append("g")
-		.call(d3.axisLeft(y))
-		.append("text")
-		.attr("fill", "#000")
-		.attr("transform", "rotate(-90)")
-		.attr("y", 6)
-		.attr("dy", "0.71em")
-		.attr("text-anchor", "end")
-		.text("Price ($)");
+		function getAppList(obj) {
+			if (obj && obj.retcode == 0) {
+				applist = obj.data;
+				console.log(applist);
+			}
+		}
 
-	g.append("path")
-		.datum(data)
-		.attr("fill", "none")
-		.attr("stroke", "steelblue")
-		.attr("stroke-linejoin", "round")
-		.attr("stroke-linecap", "round")
-		.attr("stroke-width", 1.5)
-		.attr("d", line);
+		function loadAppData(app_name) {
+			$.ajax({
+				url: `http://localhost:10021/api/gm/server2/?app_name=${app_name}&limit=1`,
+				type: 'GET',
+				success: getAppData,
+				error: function () { }
+			});
+		}
 
-</script>
+		function getAppData(obj) {
+			if (obj && obj.retcode == 0) {
+				var data = obj.data;
+				console.log(data);
+				for (var i = 0; i < data.length; i++) {
+					console.log(Date.parse(data[i].time));
+				}
+
+				$.ajax({
+					url: 'http://localhost:10021/api/gm/server/applist',
+					type: 'GET',
+					success: getAppList,
+					error: function () { }
+				});
+			}
+		}
+	</script>
+
+</body>
+
+</html>
