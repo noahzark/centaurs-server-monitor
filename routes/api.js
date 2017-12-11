@@ -86,9 +86,6 @@ router.get('/server2', (req, res) => {
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 10;
 
-		console.log(app_name);
-		console.log(limit);
-		console.log(app_list);
 	if (!app_name) {
 		res_obj.retcode = 2;
 		res_obj.msg = "no app name"
