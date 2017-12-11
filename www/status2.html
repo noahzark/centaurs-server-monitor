@@ -98,7 +98,7 @@
 		var applist = [];
 		function reqAppList() {
 			$.ajax({
-				url: 'http://localhost:10021/api/gm/server/applist',
+				url: 'http://47.88.77.157:10021/api/gm/server/applist',
 				type: 'GET',
 				success: loadAppList,
 				error: function () { }
@@ -116,7 +116,7 @@
 
 		function reqAppData(app_name) {
 			$.ajax({
-				url: `http://localhost:10021/api/gm/server2/?app_name=${app_name}&limit=1`,
+				url: `http://47.88.77.157:10021/api/gm/server2/?app_name=${app_name}&limit=1`,
 				type: 'GET',
 				success: function (data) {
 					loadAppData(app_name, data);
