@@ -121,16 +121,27 @@ router.get('/server2', (req, res) => {
 						LogService.getErrLog(app_name, limit, (err, logs) => {
 							if (err) {
 								console.log(`[MongoDB][ERR] ${err}`);
-							} else { 
+							} else {
 								var tmp = {};
 								for (var i = 0; i < logs.length; i++) {
 									data[i].err_time = logs[i].time;
 									data[i].err_info = logs[i].err;
 								}
-								res_obj.retcode = 0;
-								res_obj.msg = "success";
-								res_obj.data = data;
-								res.send(JSON.stringify(res_obj));
+								LogService.getTestLog(app_name, limit, (err, logs) => {
+									if (err) {
+										console.log(`[MongoDB][ERR] ${err}`);
+									} else {
+										var tmp = {};
+										for (var i = 0; i < logs.length; i++) {
+											data[i].test_time = logs[i].time;
+											data[i].test_msg = logs[i].msg;
+										}
+										res_obj.retcode = 0;
+										res_obj.msg = "success";
+										res_obj.data = data;
+										res.send(JSON.stringify(res_obj));
+									}
+								});
 							}
 						});
 					}
