@@ -40,26 +40,26 @@
 
 		<div id="info-temp" hidden>
 			<div class="page-header">
-				<h3 data-toggle="collapse" data-target="#$app_name$">$app_name$</h3>
+				<h3 data-toggle="collapse" data-target="#$app_name$_info">$app_name$</h3>
 			</div>
-			<div id="$app_name$" class="collapse">
+			<div id="$app_name$_info" class="collapse in">
 				<div>
 					<ul class="list-group">
-						<li class="list-group-item">服务使用内存：
-							<span id="$app_name$_$srv_alc$">$srv_alc$byte</span>
+						<li class="list-group-item">程序使用内存：
+							<span id="$app_name$_$srv_alc$">$srv_alc$ byte</span>
 						</li>
-						<li class="list-group-item">服务空余内存：
-							<span id="$app_name$_$srv_free$">$srv_free$byte</span>
+						<li class="list-group-item">程序空余内存：
+							<span id="$app_name$_$srv_free$">$srv_free$ byte</span>
 						</li>
 						<li class="list-group-item">系统空余内存：
-							<span id="$app_name$_$sys_free$">$sys_free$byte</span>
+							<span id="$app_name$_$sys_free$">$sys_free$ byte</span>
 						</li>
 						<li class="list-group-item">系统内存总量：
-							<span id="$app_name$_$sys_sum$">$sys_sum$byte</span>
+							<span id="$app_name$_$sys_sum$">$sys_sum$ byte</span>
 						</li>
 					</ul>
 				</div>
-				<label for="$app_name$_sys_usage">服务内存用量</label>
+				<label for="$app_name$_sys_usage">程序内存用量</label>
 				<div class="progress" id="$app_name$_srv_usage">
 					<div class="progress-bar" role="progressbar" aria-valuenow="$srv_usage$" aria-valuemin="0" aria-valuemax="100" style="width: $srv_usage$%;">
 						$srv_usage$%
@@ -136,19 +136,26 @@
 
 				var width = 2;
 
-					resObj.app_name = app_name;
-					resObj.srv_alc = data[0].srv_alc;
-					resObj.srv_free = data[0].srv_free;
-					resObj.sys_free = data[0].sys_free;
-					resObj.sys_sum = data[0].sys_sum;
-					resObj.srv_usage = Math.round(data[0].srv_alc / (data[0].srv_alc + data[0].srv_free) * 100);
-					resObj.sys_usage = Math.round((1 - data[0].sys_free / data[0].sys_sum) * 100);
-					var resHtml = tempListHtmlAsk.temp(resObj);
-					$("#info").append(resHtml);
+				resObj.app_name = app_name;
+				resObj.srv_alc = data[0].srv_alc;
+				resObj.srv_free = data[0].srv_free;
+				resObj.sys_free = data[0].sys_free;
+				resObj.sys_sum = data[0].sys_sum;
+				resObj.srv_usage = Math.round(data[0].srv_alc / (data[0].srv_alc + data[0].srv_free) * 100);
+				resObj.sys_usage = Math.round((1 - data[0].sys_free / data[0].sys_sum) * 100);
+				var resHtml = tempListHtmlAsk.temp(resObj);
+
+				var myElem = document.getElementById(app_name);
+
+				if (myElem === null) {
+					$("#info").append(`<div id='${app_name}'>${resHtml}</div>`);
+				} else {
+					myElem.innerHTML = resHtml;
+				}
 			}
 		}
 		reqAppList();
-		
+		setInterval(reqAppList, 5000);
 	</script>
 </body>
 
