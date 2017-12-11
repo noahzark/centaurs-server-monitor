@@ -57,12 +57,18 @@
 						<li class="list-group-item">系统内存总量：
 							<span id="$app_name$_$sys_sum$">$sys_sum$ byte</span>
 						</li>
+						<li class="list-group-item">上一次测试时间：
+							<span id="$app_name$_$test_time$">$test_time$</span>
+						</li>
+						<li class="list-group-item">上一次测试结果：
+							<span id="$app_name$_$test_msg$">$test_msg$</span>
+						</li>
 						<li class="list-group-item">上一次报错时间：
-								<span id="$app_name$_$err_time$">$err_time$</span>
-							</li>
-							<li class="list-group-item">上一次报错内容：
-									<span id="$app_name$_$err_info$">$err_info$</span>
-								</li>
+							<span id="$app_name$_$err_time$">$err_time$</span>
+						</li>
+						<li class="list-group-item">上一次报错内容：
+							<span id="$app_name$_$err_info$">$err_info$</span>
+						</li>
 					</ul>
 				</div>
 				<label for="$app_name$_sys_usage">程序内存用量</label>
@@ -147,11 +153,15 @@
 				resObj.srv_usage = Math.round(data[0].srv_alc / (data[0].srv_alc + data[0].srv_free) * 100);
 				resObj.sys_usage = Math.round((1 - data[0].sys_free / data[0].sys_sum) * 100);
 				resObj.err_time = data[0].err_time || '无';
-				resObj.err_info = data[0].err_info || '无';
-				var resHtml = tempInfoHtml.temp(resObj);
-
-				var myElem = document.getElementById(app_name);
-
+				if (data[0].err_info) {
+					resObj.err_info = '<br>' + data[0].err_info.replace(new RegExp('\n', 'g'), '<br>');
+				} else {
+					resObj.err_info = '无';
+				}
+				resObj.test_time = data[0].test_time || '无';
+				resObj.test_msg = data[0].test_msg || '无';
+				var resHtml = tempInfoHtml.temp(resObj),
+					myElem = document.getElementById(app_name);
 				if (myElem === null) {
 					$("#info").append(`<div id='${app_name}'>${resHtml}</div>`);
 				} else {
