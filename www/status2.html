@@ -36,24 +36,39 @@
 			<h1>服务器 - 监控</h1>
 		</div>
 
-		<div class="info">
-			<div class="page-header">
-				<h3 data-toggle="collapse" data-target="#a">joke-api</h3>
-			</div>
-			<div id="a" class="collapse">
-				<div>
+		<div id="info"></div>
 
+		<div id="info-temp" hidden>
+			<div class="page-header">
+				<h3 data-toggle="collapse" data-target="#$app_name$">$app_name$</h3>
+			</div>
+			<div id="$app_name$" class="collapse">
+				<div>
+					<ul class="list-group">
+						<li class="list-group-item">服务使用内存：
+							<span id="$app_name$_$srv_alc$">$srv_alc$byte</span>
+						</li>
+						<li class="list-group-item">服务空余内存：
+							<span id="$app_name$_$srv_free$">$srv_free$byte</span>
+						</li>
+						<li class="list-group-item">系统空余内存：
+							<span id="$app_name$_$sys_free$">$sys_free$byte</span>
+						</li>
+						<li class="list-group-item">系统内存总量：
+							<span id="$app_name$_$sys_sum$">$sys_sum$byte</span>
+						</li>
+					</ul>
 				</div>
-				<label for="joke-api_sys_usage">服务内存用量</label>
-				<div class="progress" id="joke-api_sys_usage">
-					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-						60%
+				<label for="$app_name$_sys_usage">服务内存用量</label>
+				<div class="progress" id="$app_name$_srv_usage">
+					<div class="progress-bar" role="progressbar" aria-valuenow="$srv_usage$" aria-valuemin="0" aria-valuemax="100" style="width: $srv_usage$%;">
+						$srv_usage$%
 					</div>
 				</div>
-				<label for="joke-api_sys_usage">服务器内存用量</label>
-				<div class="progress" id="joke-api_sys_usage">
-					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-						60%
+				<label for="$app_name$_sys_usage">服务器内存用量</label>
+				<div class="progress" id="$app_name$_sys_usage">
+					<div class="progress-bar" role="progressbar" aria-valuenow="$sys_usage$" aria-valuemin="0" aria-valuemax="100" style="width: $sys_usage$%;">
+						$sys_usage$%
 					</div>
 				</div>
 			</div>
@@ -69,42 +84,72 @@
 	 crossorigin="anonymous"></script>
 
 	<script>
-		var applist = [];
 
-		function getAppList(obj) {
-			if (obj && obj.retcode == 0) {
-				applist = obj.data;
-				console.log(applist);
-			}
+		String.prototype.temp = function (obj) {
+			return this.replace(/\$\w+\$/gi, function (matches) {
+				var ret = obj[matches.replace(/\$/g, "")];
+				if (ret === "") {
+					ret = "N/A";
+				}
+				return (ret + "") === "undefined" ? matches : ret;
+			});
 		}
 
-		function loadAppData(app_name) {
+		var applist = [];
+		function reqAppList() {
 			$.ajax({
-				url: `http://localhost:10021/api/gm/server2/?app_name=${app_name}&limit=1`,
+				url: 'http://localhost:10021/api/gm/server/applist',
 				type: 'GET',
-				success: getAppData,
+				success: loadAppList,
 				error: function () { }
 			});
 		}
 
-		function getAppData(obj) {
+		function loadAppList(obj) {
 			if (obj && obj.retcode == 0) {
-				var data = obj.data;
-				console.log(data);
-				for (var i = 0; i < data.length; i++) {
-					console.log(Date.parse(data[i].time));
+				applist = obj.data;
+				for (var i = 0; i < applist.length; i++) {
+					reqAppData(applist[i]);
 				}
-
-				$.ajax({
-					url: 'http://localhost:10021/api/gm/server/applist',
-					type: 'GET',
-					success: getAppList,
-					error: function () { }
-				});
 			}
 		}
-	</script>
 
+		function reqAppData(app_name) {
+			$.ajax({
+				url: `http://localhost:10021/api/gm/server2/?app_name=${app_name}&limit=1`,
+				type: 'GET',
+				success: function (data) {
+					loadAppData(app_name, data);
+				},
+				error: function () { }
+			});
+		}
+
+		function loadAppData(app_name, obj) {
+			if (obj && obj.retcode == 0) {
+				var data = obj.data;
+
+				// reference to Feli's code
+				var tempListHtmlAsk = $('#info-temp').html();
+
+				var resObj = {};
+
+				var width = 2;
+
+					resObj.app_name = app_name;
+					resObj.srv_alc = data[0].srv_alc;
+					resObj.srv_free = data[0].srv_free;
+					resObj.sys_free = data[0].sys_free;
+					resObj.sys_sum = data[0].sys_sum;
+					resObj.srv_usage = Math.round(data[0].srv_alc / (data[0].srv_alc + data[0].srv_free) * 100);
+					resObj.sys_usage = Math.round((1 - data[0].sys_free / data[0].sys_sum) * 100);
+					var resHtml = tempListHtmlAsk.temp(resObj);
+					$("#info").append(resHtml);
+			}
+		}
+		reqAppList();
+		
+	</script>
 </body>
 
 </html>
