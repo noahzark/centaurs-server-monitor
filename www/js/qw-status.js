@@ -115,10 +115,10 @@ function updateSysTable(app_name, data) {
 		used = document.getElementById(`${app_name}-sys-used`),
 		free = document.getElementById(`${app_name}-sys-free`),
 		percent = document.getElementById(`${app_name}-sys-percent`);
-	sum.innerHTML=data.sys_sum + ' MB';
-	used.innerHTML=data.sys_used + ' MB';
-	free.innerHTML=data.sys_free + ' MB';
-	percent.innerHTML=data.sys_percent + ' %';
+	sum.innerHTML = data.sys_sum + ' MB';
+	used.innerHTML = data.sys_used + ' MB';
+	free.innerHTML = data.sys_free + ' MB';
+	percent.innerHTML = data.sys_percent + ' %';
 }
 
 function updateSrvTable(app_name, data) {
@@ -126,10 +126,10 @@ function updateSrvTable(app_name, data) {
 		used = document.getElementById(`${app_name}-srv-used`),
 		free = document.getElementById(`${app_name}-srv-free`),
 		percent = document.getElementById(`${app_name}-srv-percent`);
-	sum.innerHTML=data.srv_sum + ' MB';
-	used.innerHTML=data.srv_used + ' MB';
-	free.innerHTML=data.srv_free + ' MB';
-	percent.innerHTML=data.srv_percent + ' %';
+	sum.innerHTML = data.srv_sum + ' MB';
+	used.innerHTML = data.srv_used + ' MB';
+	free.innerHTML = data.srv_free + ' MB';
+	percent.innerHTML = data.srv_percent + ' %';
 }
 
 String.prototype.temp = function (obj) {
@@ -260,7 +260,7 @@ function reqTestData(app_name, limit) {
 		url: `http://${host}:${port}/api/gm/test-info/?app_name=${app_name}&limit=${limit}`,
 		type: 'GET',
 		success: function (obj) {
-			// loadAppData(app_name, data);
+			// loadAppData(app_name, obj);
 			console.log(obj)
 		},
 		error: function () { }
@@ -275,11 +275,31 @@ function reqErrData(app_name, limit) {
 		url: `http://${host}:${port}/api/gm/catch-err/?app_name=${app_name}&limit=${limit}`,
 		type: 'GET',
 		success: function (obj) {
-			// loadAppData(app_name, data);
-			console.log(obj)
+			loadErrData(app_name, obj);
 		},
 		error: function () { }
 	});
+}
+
+function loadErrData(app_name, obj) {
+	console.log(obj);
+	var table_id = `#${app_name}-error-table`;
+	if (obj.retcode == 0) {
+		data = obj.data;
+		for (var i = 0; i < data.length; i++) {
+			var err = 
+			`<tr>
+			<th scope="row">${i+1}</th>
+			<td>${data[i].time}</td>
+			<td>${data[i].err}</td>
+			</tr>`;
+			$(table_id).append(err);
+
+		}
+	} else {
+		console.log(`Load ${app_name} error records failed.`)
+	}
+
 }
 
 reqAppList();
