@@ -206,14 +206,42 @@ router.get('/test-info', (req, res) => {
 		}
 	}
 });
+
+router.get('/catch-err', (req, res) => {
+	var res_obj = {},
+		app_name = req.query.app_name,
+		limit = req.query.limit * 1 || 5;
+	if (!app_name) {
+		res_obj.retcode = 2;
+		res_obj.msg = "no app name"
+		res.send(JSON.stringify(res_obj));
+	} else {
+		res.header("Access-Control-Allow-Origin", "*");
+		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		res.header("Content-Type", "application/json;charset=UTF-8");
+		try {
+			LogService.getErrLog(app_name, limit, (err, logs) => {
+				var data = []
+				if (err) {
+					console.log(`[MongoDB][ERR] ${err}`);
+				} else {
+					LogService.getErrLog(app_name, limit, (err, logs) => {
+						if (err) {
+							console.log(`[MongoDB][ERR] ${err}`);
+						} else {
+							var tmp = {}
 							for (var i = 0; i < logs.length; i++) {
-								data[i].test_time = logs[i].time;
-								data[i].test_msg = logs[i].msg;
+								if (logs[i]) {
+									tmp.time = logs[i].time;
+									tmp.err = logs[i].err;
+									data.push(tmp);
+								} else {
+									break;
+								}
 							}
 							res_obj.retcode = 0;
 							res_obj.msg = "success";
 							res_obj.data = data;
-							console.log(res_obj)
 							res.send(JSON.stringify(res_obj));
 						}
 					});
