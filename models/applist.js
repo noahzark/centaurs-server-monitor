@@ -9,7 +9,7 @@
 var mongoose = require('mongoose');
 
 var ApplistSchema = mongoose.Schema({
-	app_name: {
+	name: {
         type: String,
     },
     status: {

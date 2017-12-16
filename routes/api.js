@@ -28,21 +28,48 @@ if (config.has('time_interval_limit')) {
 	time_interval_limit = config.get('time_interval_limit');
 }
 
-var sysCheckTime = function (app_check_interval) {
-	setInterval(() => {
+var updateApplistCache = () => {
+	LogService.getApplist((err, list) => {
+		if (err) {
+			console.log(`[MongoDB][ERR] ${err}`);
+		} else {
+			app_list = list;
+			console.log(`[MongoDB][MSG] app_list is updated`);
+		}
+	});
+}
+
+var sysCheckTime = (app_check_interval) => {
+	var check = () => {
 		var now = Date.now();
+		LogService.getApplist((err, list) => {
+			if (err) {
+				console.log(`[MongoDB][ERR] ${err}`);
+			} else {
+				app_list = list;
+			}
+		});
 		for (const app_name in app_check_time_list) {
 			if (app_name && now - app_check_time_list[app_name] > time_interval_limit) {
 				var time = new Date(app_check_time_list[app_name]);
 				console.log(`[Send][Alert][Email] ${app_name} is offline at ${time.toString()}(${app_check_time_list[app_name]})`);
 				emailClient.emailLog(`[API Server Error] ${app_name}`, `${app_name} is offline at ${time.toString()}`);
 				delete app_check_time_list[app_name];
+				LogService.updateApplist({
+					name: app_name,
+					status: 'offline'
+				}, (err) => {
+					console.log(`[MongoDB][ERR] ${err}`);
+				})
 			}
 		}
-	}, app_check_interval);
+	};
+	check();
+	setInterval(check, app_check_interval);
 }
 
 sysCheckTime();
+
 
 router.get('/server', function (req, res) {
 	var memUsage = util.inspect(process.memoryUsage()) + ''
@@ -65,7 +92,7 @@ router.get('/server', function (req, res) {
 	res.send(JSON.stringify(info))
 })
 
-router.get('/server/applist', (req, res) => {
+router.get('/applist', (req, res) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
@@ -81,18 +108,13 @@ router.get('/server/applist', (req, res) => {
 	res.send(JSON.stringify(res_obj));
 })
 
-router.get('/server2', (req, res) => {
+router.get('/server-info', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 10;
-
 	if (!app_name) {
 		res_obj.retcode = 2;
 		res_obj.msg = "no app name"
-		res.send(JSON.stringify(res_obj));
-	} else if (app_list.indexOf(app_name) < 0) {
-		res_obj.retcode = 3;
-		res_obj.msg = `${app_name} is not running right now`
 		res.send(JSON.stringify(res_obj));
 	} else {
 		if (app_list.length < 1) {
@@ -118,32 +140,10 @@ router.get('/server2', (req, res) => {
 							tmp.sys_sum = logs[i].sys_sum;
 							data.push(tmp);
 						}
-						LogService.getErrLog(app_name, limit, (err, logs) => {
-							if (err) {
-								console.log(`[MongoDB][ERR] ${err}`);
-							} else {
-								var tmp = {};
-								for (var i = 0; i < logs.length; i++) {
-									data[i].err_time = logs[i].time;
-									data[i].err_info = logs[i].err;
-								}
-								LogService.getTestLog(app_name, limit, (err, logs) => {
-									if (err) {
-										console.log(`[MongoDB][ERR] ${err}`);
-									} else {
-										var tmp = {};
-										for (var i = 0; i < logs.length; i++) {
-											data[i].test_time = logs[i].time;
-											data[i].test_msg = logs[i].msg;
-										}
-										res_obj.retcode = 0;
-										res_obj.msg = "success";
-										res_obj.data = data;
-										res.send(JSON.stringify(res_obj));
-									}
-								});
-							}
-						});
+						res_obj.retcode = 0;
+						res_obj.msg = "success";
+						res_obj.data = data;
+						res.send(JSON.stringify(res_obj));
 					}
 				});
 			} catch (err) {
@@ -264,9 +264,18 @@ router.post('/server-info', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Sys] ${JSON.stringify(info)}`);
-		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
-			app_list.push(info.app_name);
-		}
+		LogService.updateApplist(
+			{
+				name: info.app_name,
+				status: 'running'
+			}, (err) => {
+				if (err) {
+					console.log(`[MongoDB][ERR] ${err}`);
+				} else {
+					updateApplistCache();
+				}
+			}
+		);
 		LogService.addSysLog(info, (err) => {
 			app_check_time_list[info.app_name] = info.next_time;
 			var res_obj = {};
@@ -295,6 +304,18 @@ router.post('/test-info', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Test] ${JSON.stringify(info)}`);
+		LogService.updateApplist(
+			{
+				name: info.app_name,
+				status: 'running'
+			}, (err) => {
+				if (err) {
+					console.log(`[MongoDB][ERR] ${err}`);
+				} else {
+					updateApplistCache();
+				}
+			}
+		);
 		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
 			app_list.push(info.app_name);
 		}
@@ -324,6 +345,18 @@ router.post('/catch-err', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Err] ${JSON.stringify(info)}`);
+		LogService.updateApplist(
+			{
+				name: info.app_name,
+				status: 'running'
+			}, (err) => {
+				if (err) {
+					console.log(`[MongoDB][ERR] ${err}`);
+				} else {
+					updateApplistCache();
+				}
+			}
+		);
 		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
 			app_list.push(info.app_name);
 		}
@@ -353,6 +386,18 @@ router.post('/api-time', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Time] ${JSON.stringify(info)}`);
+		LogService.updateApplist(
+			{
+				name: info.app_name,
+				status: 'running'
+			}, (err) => {
+				if (err) {
+					console.log(`[MongoDB][ERR] ${err}`);
+				} else {
+					updateApplistCache();
+				}
+			}
+		);
 		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
 			app_list.push(info.app_name);
 		}
