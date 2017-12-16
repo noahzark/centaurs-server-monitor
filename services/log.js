@@ -9,7 +9,8 @@
 var SysLog = require('../models/syslog'),
 	TestLog = require('../models/testlog'),
 	ErrLog = require('../models/errlog'),
-	UsageLog = require('../models/usagelog');
+	UsageLog = require('../models/usagelog'),
+	Applist = require('../models/applist');
 
 /**
  * add system info log into db
@@ -105,4 +106,33 @@ module.exports.getUsageLog = (app_name, limit, callback) => {
 		var sort = { 'createdAt': -1 };
 		UsageLog.find(query).sort(sort).limit(limit).exec(callback);
 	}
+}
+
+/**
+ * update app list. if the app log does not exist, create a new one
+ * @param {Object} app - app, include name and status
+ * @param {Function} callback 
+ */
+module.exports.updateApplist = function (app, callback) {
+	var query = { 'name': app.name },
+		doc = {},
+		opt = { upsert: true };
+	if (app.status) {
+		doc.status = app.status;
+	}
+	if (app.start_time) {
+		doc.start_time = app.start_time;
+	}
+	if (app.end_time) {
+		doc.end_time = app.end_time;
+	}
+	Applist.findOneAndUpdate(query, doc, opt).exec(callback);
+}
+
+/**
+ * get app list
+ * @param {function} callback 
+ */
+module.exports.getApplist = (callback) => {
+	Applist.find().exec(callback);
 }
