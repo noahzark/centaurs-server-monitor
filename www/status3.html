@@ -18,28 +18,82 @@
 
 <body>
 
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark indigo">
+			<div class="container">
+				<a class="navbar-brand" href="#">Monitor Server</a>
+			</div>
+		</nav>
+	</header>
 
-	<!--Main layout-->
-	<main>
+	<main class="mt-5">
+		<div class="container">
+			<div>
+				<h1>App 001</h1>
+				<hr>
 
+				<section>
+					<div class="row">
+
+						<div class="col-md-7 mb-4">
+							<h5>System Memory (MB)</h5>
+							<canvas id="joke-api-sys-mem"></canvas>
+						</div>
+
+						<div class="col-md-5 mb-4">
+							<h3>Summary</h3>
+							<hr>
+							<h5>Status:
+								<span class="mx-1">Running</span>
+							</h5>
+							<hr>
+							<h5>API Number:
+								<span class="mx-1">14</span>
+							</h5>
+							<hr>
+							<h5>Test Time:
+								<span class="mx-1">2017-12-18</span>
+							</h5>
+							<hr>
+							<h5>Test Result:
+								<span class="mx-1">Success</span>
+							</h5>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<div class="row">
+						<div class="col-md-7 mb-4">
+							<h5>APP Service Memory (MB)</h5>
+							<canvas id="joke-api-srv-mem"></canvas>
+						</div>
+						<div class="col-md-5 mb-4">
+							<ul class="list-group">
+								<li class="list-group-item">Current Service Memory Usage</li>
+								<li class="list-group-item">C</li>
+								<li class="list-group-item">Morbi leo risus</li>
+								<li class="list-group-item">Porta ac consectetur ac</li>
+								<li class="list-group-item">Vestibulum at eros</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
 	</main>
-	<!--Main layout-->
 
-	<!--Footer-->
 	<footer class="page-footer blue center-on-small-only unique-color-dark pt-0">
 
-		<!--Copyright-->
 		<div class="footer-copyright">
 			<div class="container-fluid">
-				© 2017 
+				© 2017
 				<a href="https://www.centaurstech.com/"> Centaurs Technologies Co. Ltd </a>
 				All Rights Reserved.
 			</div>
 		</div>
-		<!--/.Copyright-->
 
 	</footer>
-	<!--/.Footer-->
 
 	<!-- SCRIPTS -->
 	<!-- JQuery -->
@@ -51,7 +105,7 @@
 	<!-- MDB core JavaScript -->
 	<script type="text/javascript" src="js/mdb.min.js"></script>
 	<!-- Custom JavaScript -->
-	<script type="text/javascript" src=""></script>
+	<script type="text/javascript" src="js/qw-status.js"></script>
 
 </body>
 
