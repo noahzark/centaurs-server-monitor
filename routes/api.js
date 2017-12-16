@@ -157,6 +157,52 @@ router.get('/server2', (req, res) => {
 	}
 });
 
+router.get('/test-info', (req, res) => {
+	var res_obj = {},
+		app_name = req.query.app_name,
+		limit = req.query.limit * 1 || 5;
+	if (!app_name) {
+		res_obj.retcode = 2;
+		res_obj.msg = "no app name"
+		res.send(JSON.stringify(res_obj));
+	} else {
+		res.header("Access-Control-Allow-Origin", "*");
+		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		res.header("Content-Type", "application/json;charset=UTF-8");
+		try {
+			LogService.getSysLog(app_name, limit, (err, logs) => {
+				var data = []
+				if (err) {
+					console.log(`[MongoDB][ERR] ${err}`);
+				} else {
+					LogService.getTestLog(app_name, limit, (err, logs) => {
+						if (err) {
+							console.log(`[MongoDB][ERR] ${err}`);
+						} else {
+							var tmp = {};
+							for (var i = 0; i < logs.length; i++) {
+								data[i].test_time = logs[i].time;
+								data[i].test_msg = logs[i].msg;
+							}
+							res_obj.retcode = 0;
+							res_obj.msg = "success";
+							res_obj.data = data;
+							console.log(res_obj)
+							res.send(JSON.stringify(res_obj));
+						}
+					});
+				}
+			});
+		} catch (err) {
+			console.error(err);
+			res_obj = {};
+			res_obj.retcode = 1;
+			res_obj.msg = "request error"
+			res.send(JSON.stringify(res_obj));
+		}
+	}
+});
+
 router.post('/server-info', function (req, res, err) {
 	try {
 		if (!req.body) {
