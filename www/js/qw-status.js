@@ -1,3 +1,6 @@
+// var host = '47.88.77.157',
+var host = 'localhost',
+port = '10021';
 
 function updateSysChart(id, chart_data) {
 	var ctxL = document.getElementById(id).getContext('2d');
@@ -7,42 +10,42 @@ function updateSysChart(id, chart_data) {
 			labels: chart_data.labels,
 			datasets: [
 				{
-					label: "Free",
-					backgroundColor: "rgba(151,205,169,0.2)",
+					label: 'Free',
+					backgroundColor: 'rgba(151,205,169,0.2)',
 					borderWidth: 2,
-					borderColor: "rgba(151,205,169,1)",
-					pointBackgroundColor: "rgba(151,205,169,1)",
-					pointBorderColor: "#fff",
+					borderColor: 'rgba(151,205,169,1)',
+					pointBackgroundColor: 'rgba(151,205,169,1)',
+					pointBorderColor: '#fff',
 					pointBorderWidth: 1,
 					pointRadius: 4,
-					pointHoverBackgroundColor: "#fff",
-					pointHoverBorderColor: "rgba(151,205,169,1)",
+					pointHoverBackgroundColor: '#fff',
+					pointHoverBorderColor: 'rgba(151,205,169,1)',
 					data: chart_data.sys_free
 				},
 				{
-					label: "Used",
-					backgroundColor: "rgba(205,151,187,0.2)",
+					label: 'Used',
+					backgroundColor: 'rgba(205,151,187,0.2)',
 					borderWidth: 2,
-					borderColor: "rgba(205,151,187,1)",
-					pointBackgroundColor: "rgba(205,151,187,1)",
-					pointBorderColor: "#fff",
+					borderColor: 'rgba(205,151,187,1)',
+					pointBackgroundColor: 'rgba(205,151,187,1)',
+					pointBorderColor: '#fff',
 					pointBorderWidth: 1,
 					pointRadius: 4,
-					pointHoverBackgroundColor: "#fff",
-					pointHoverBorderColor: "rgba(205,151,187,1)",
+					pointHoverBackgroundColor: '#fff',
+					pointHoverBorderColor: 'rgba(205,151,187,1)',
 					data: chart_data.sys_used
 				},
 				{
-					label: "Total",
-					backgroundColor: "rgba(220,220,220,0.2)",
+					label: 'Total',
+					backgroundColor: 'rgba(220,220,220,0.2)',
 					borderWidth: 2,
-					borderColor: "rgba(220,220,220,1)",
-					pointBackgroundColor: "rgba(220,220,220,1)",
-					pointBorderColor: "#fff",
+					borderColor: 'rgba(220,220,220,1)',
+					pointBackgroundColor: 'rgba(220,220,220,1)',
+					pointBorderColor: '#fff',
 					pointBorderWidth: 1,
 					pointRadius: 4,
-					pointHoverBackgroundColor: "#fff",
-					pointHoverBorderColor: "rgba(220,220,220,1)",
+					pointHoverBackgroundColor: '#fff',
+					pointHoverBorderColor: 'rgba(220,220,220,1)',
 					data: chart_data.sys_sum
 				}
 			]
@@ -61,42 +64,42 @@ function updateSrvChart(id, chart_data) {
 			labels: chart_data.labels,
 			datasets: [
 				{
-					label: "Free",
-					backgroundColor: "rgba(151,205,169,0.2)",
+					label: 'Free',
+					backgroundColor: 'rgba(187,205,151,0.2)',
 					borderWidth: 2,
-					borderColor: "rgba(151,205,169,1)",
-					pointBackgroundColor: "rgba(151,205,169,1)",
-					pointBorderColor: "#fff",
+					borderColor: 'rgba(187,205,151,1)',
+					pointBackgroundColor: 'rgba(187,205,151,1)',
+					pointBorderColor: '#fff',
 					pointBorderWidth: 1,
 					pointRadius: 4,
-					pointHoverBackgroundColor: "#fff",
-					pointHoverBorderColor: "rgba(151,205,169,1)",
+					pointHoverBackgroundColor: '#fff',
+					pointHoverBorderColor: 'rgba(187,205,151,1)',
 					data: chart_data.srv_free
 				},
 				{
-					label: "Used",
-					backgroundColor: "rgba(205,151,187,0.2)",
+					label: 'Used',
+					backgroundColor: 'rgba(169,151,205,0.2)',
 					borderWidth: 2,
-					borderColor: "rgba(205,151,187,1)",
-					pointBackgroundColor: "rgba(205,151,187,1)",
-					pointBorderColor: "#fff",
+					borderColor: 'rgba(169,151,205,1)',
+					pointBackgroundColor: 'rgba(169,151,205,1)',
+					pointBorderColor: '#fff',
 					pointBorderWidth: 1,
 					pointRadius: 4,
-					pointHoverBackgroundColor: "#fff",
-					pointHoverBorderColor: "rgba(205,151,187,1)",
+					pointHoverBackgroundColor: '#fff',
+					pointHoverBorderColor: 'rgba(169,151,205,1)',
 					data: chart_data.srv_used
 				},
 				{
-					label: "Allocated",
-					backgroundColor: "rgba(220,220,220,0.2)",
+					label: 'Allocated',
+					backgroundColor: 'rgba(220,220,220,0.2)',
 					borderWidth: 2,
-					borderColor: "rgba(220,220,220,1)",
-					pointBackgroundColor: "rgba(220,220,220,1)",
-					pointBorderColor: "#fff",
+					borderColor: 'rgba(220,220,220,1)',
+					pointBackgroundColor: 'rgba(220,220,220,1)',
+					pointBorderColor: '#fff',
 					pointBorderWidth: 1,
 					pointRadius: 4,
-					pointHoverBackgroundColor: "#fff",
-					pointHoverBorderColor: "rgba(220,220,220,1)",
+					pointHoverBackgroundColor: '#fff',
+					pointHoverBorderColor: 'rgba(220,220,220,1)',
 					data: chart_data.srv_alc
 				}
 			]
@@ -109,9 +112,9 @@ function updateSrvChart(id, chart_data) {
 
 String.prototype.temp = function (obj) {
 	return this.replace(/\$\w+\$/gi, function (matches) {
-		var ret = obj[matches.replace(/\$/g, "")];
-		if (ret === "") {
-			ret = "N/A";
+		var ret = obj[matches.replace(/\$/g, '')];
+		if (ret === '') {
+			ret = 'N/A';
 		}
 		return (ret + "") === "undefined" ? matches : ret;
 	});
@@ -121,7 +124,7 @@ var applist = [];
 
 function reqAppList() {
 	$.ajax({
-		url: 'http://47.88.77.157:10021/api/gm/server/applist',
+		url: `http://${host}:${port}/api/gm/server/applist`,
 		type: 'GET',
 		success: loadAppList,
 		error: function () { }
@@ -132,14 +135,18 @@ function loadAppList(obj) {
 	if (obj && obj.retcode == 0) {
 		applist = obj.data;
 		for (var i = 0; i < applist.length; i++) {
-			reqAppData(applist[i]);
+			// reqAppData(applist[i]);
 		}
+		console.log(applist);
 	}
 }
 
-function reqAppData(app_name) {
+function reqAppData(app_name, limit) {
+	if (!limit) {
+		limit = 20;
+	} 
 	$.ajax({
-		url: `http://47.88.77.157:10021/api/gm/server2/?app_name=${app_name}&limit=20`,
+		url: `http://${host}:${port}/api/gm/server2/?app_name=${app_name}&limit=${limit}`,
 		type: 'GET',
 		success: function (data) {
 			loadAppData(app_name, data);
@@ -223,7 +230,40 @@ function loadAppData(app_name, obj) {
 		*/
 	}
 }
-// reqAppList();
+
+function reqTestData(app_name, limit) {
+	if (!limit) {
+		limit = 20;
+	} 
+	$.ajax({
+		url: `http://${host}:${port}/api/gm/test-info/?app_name=${app_name}&limit=${limit}`,
+		type: 'GET',
+		success: function (data) {
+			// loadAppData(app_name, data);
+			console.log(data)
+		},
+		error: function () { }
+	});
+}
+
+function reqErrData(app_name, limit) {
+	if (!limit) {
+		limit = 1000;
+	} 
+	$.ajax({
+		url: `http://${host}:${port}/api/gm/catch-err/?app_name=${app_name}&limit=${limit}`,
+		type: 'GET',
+		success: function (obj) {
+			// loadAppData(app_name, data);
+			console.log(obj)
+		},
+		error: function () { }
+	});
+}
+
+reqAppList();
 // setInterval(reqAppList, 5000);
 
 reqAppData('joke-api');
+console.log('hhhhh')
+reqErrData('joke-api');
