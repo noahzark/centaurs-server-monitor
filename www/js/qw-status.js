@@ -1,9 +1,9 @@
 // var host = '47.88.77.157',
 var host = 'localhost',
-port = '10021';
+	port = '10021';
 
-function updateSysChart(id, chart_data) {
-	var ctxL = document.getElementById(id).getContext('2d');
+function updateSysChart(app_name, chart_data) {
+	var ctxL = document.getElementById(`${app_name}-sys-mem`).getContext('2d');
 	var myLineChart = new Chart(ctxL, {
 		type: 'line',
 		data: {
@@ -56,8 +56,8 @@ function updateSysChart(id, chart_data) {
 	});
 };
 
-function updateSrvChart(id, chart_data) {
-	var ctxL = document.getElementById(id).getContext('2d');
+function updateSrvChart(app_name, chart_data) {
+	var ctxL = document.getElementById(`${app_name}-srv-mem`).getContext('2d');
 	var myLineChart = new Chart(ctxL, {
 		type: 'line',
 		data: {
@@ -110,6 +110,28 @@ function updateSrvChart(id, chart_data) {
 	});
 };
 
+function updateSysTable(app_name, data) {
+	var sum = document.getElementById(`${app_name}-sys-sum`),
+		used = document.getElementById(`${app_name}-sys-used`),
+		free = document.getElementById(`${app_name}-sys-free`),
+		percent = document.getElementById(`${app_name}-sys-percent`);
+	sum.innerHTML=data.sys_sum + ' MB';
+	used.innerHTML=data.sys_used + ' MB';
+	free.innerHTML=data.sys_free + ' MB';
+	percent.innerHTML=data.sys_percent + ' %';
+}
+
+function updateSrvTable(app_name, data) {
+	var sum = document.getElementById(`${app_name}-srv-sum`),
+		used = document.getElementById(`${app_name}-srv-used`),
+		free = document.getElementById(`${app_name}-srv-free`),
+		percent = document.getElementById(`${app_name}-srv-percent`);
+	sum.innerHTML=data.srv_sum + ' MB';
+	used.innerHTML=data.srv_used + ' MB';
+	free.innerHTML=data.srv_free + ' MB';
+	percent.innerHTML=data.srv_percent + ' %';
+}
+
 String.prototype.temp = function (obj) {
 	return this.replace(/\$\w+\$/gi, function (matches) {
 		var ret = obj[matches.replace(/\$/g, '')];
@@ -124,7 +146,7 @@ var applist = [];
 
 function reqAppList() {
 	$.ajax({
-		url: `http://${host}:${port}/api/gm/server/applist`,
+		url: `http://${host}:${port}/api/gm/applist`,
 		type: 'GET',
 		success: loadAppList,
 		error: function () { }
@@ -134,31 +156,47 @@ function reqAppList() {
 function loadAppList(obj) {
 	if (obj && obj.retcode == 0) {
 		applist = obj.data;
-		for (var i = 0; i < applist.length; i++) {
-			// reqAppData(applist[i]);
-		}
 		console.log(applist);
+
+		for (var i = 0; i < applist.length; i++) {
+			var tempInfoHtml = $('#info-temp').html();
+			var resObj = {},
+				app_name = applist[i].name;
+			resObj.app_name = app_name;
+			resObj.app_status = applist[i].status;
+			var resHtml = tempInfoHtml.temp(resObj),
+				myElem = document.getElementById(app_name);
+			if (myElem === null) {
+				$("#info").append(`<div id='${app_name}'>${resHtml}</div>`);
+			} else {
+				myElem.innerHTML = resHtml;
+			}
+		}
 	}
 }
 
-function reqAppData(app_name, limit) {
+function reqSysData(app_name, limit) {
 	if (!limit) {
 		limit = 20;
-	} 
+	}
 	$.ajax({
-		url: `http://${host}:${port}/api/gm/server2/?app_name=${app_name}&limit=${limit}`,
+		url: `http://${host}:${port}/api/gm/server-info/?app_name=${app_name}&limit=${limit}`,
 		type: 'GET',
-		success: function (data) {
-			loadAppData(app_name, data);
+		success: (obj) => {
+			loadSysData(app_name, obj);
 		},
-		error: function () { }
+		error: (err) => {
+			console.log(`request ${app_name} data failed`)
+		}
 	});
 }
 
-function loadAppData(app_name, obj) {
+function loadSysData(app_name, obj) {
 	if (obj && obj.retcode == 0) {
 		var data = obj.data,
-			chart_data = {};
+			chart_data = {},
+			time, sys_sum, sys_free, srv_alc, srv_free;
+
 		chart_data.labels = [];
 
 		chart_data.sys_sum = [];
@@ -170,11 +208,11 @@ function loadAppData(app_name, obj) {
 		chart_data.srv_used = [];
 
 		for (var i = 0; i < data.length; ++i) {
-			var time = /\d\d:\d\d/.exec(data[i].time)[0],
-				sys_sum = data[i].sys_sum / 1000 || 0,
-				sys_free = data[i].sys_free / 1000 || 0,
-				srv_alc = data[i].srv_alc / 1000 || 0,
-				srv_free = data[i].srv_free / 1000 || 0;
+			time = /\d\d:\d\d/.exec(data[i].time)[0];
+			sys_sum = data[i].sys_sum / 1000 || 0;
+			sys_free = data[i].sys_free / 1000 || 0;
+			srv_alc = data[i].srv_alc / 1000 || 0;
+			srv_free = data[i].srv_free / 1000 || 0;
 
 			chart_data.labels.push(time);
 
@@ -194,53 +232,36 @@ function loadAppData(app_name, obj) {
 		chart_data.srv_alc.reverse();
 		chart_data.srv_free.reverse();
 
-		console.log(chart_data.srv_alc);
-		console.log(chart_data.srv_free);
+		updateSysTable(app_name, {
+			sys_sum: Math.round(sys_sum),
+			sys_used: Math.round(sys_sum - sys_free),
+			sys_free: Math.round(sys_free),
+			sys_percent: Math.round(10000 - sys_free / sys_sum * 10000) / 100
+		})
 
-		updateSysChart(`${app_name}-sys-mem`, chart_data);
-		updateSrvChart(`${app_name}-srv-mem`, chart_data);
-
-		/*
-		// reference to Feli's code
-		var tempInfoHtml = $('#info-temp').html();
-
-		var resObj = {};
-		resObj.app_name = app_name;
-		resObj.srv_alc = data[0].srv_alc;
-		resObj.srv_free = data[0].srv_free;
-		resObj.sys_free = data[0].sys_free;
-		resObj.sys_sum = data[0].sys_sum;
-		resObj.srv_usage = Math.round(data[0].srv_alc / (data[0].srv_alc + data[0].srv_free) * 100);
-		resObj.sys_usage = Math.round((1 - data[0].sys_free / data[0].sys_sum) * 100);
-		resObj.err_time = data[0].err_time || '无';
-		if (data[0].err_info) {
-			resObj.err_info = '<br>' + data[0].err_info.replace(new RegExp('\n', 'g'), '<br>');
-		} else {
-			resObj.err_info = '无';
-		}
-		resObj.test_time = data[0].test_time || '无';
-		resObj.test_msg = data[0].test_msg || '无';
-		var resHtml = tempInfoHtml.temp(resObj),
-			myElem = document.getElementById(app_name);
-		if (myElem === null) {
-			$("#info").append(`<div id='${app_name}'>${resHtml}</div>`);
-		} else {
-			myElem.innerHTML = resHtml;
-		}
-		*/
+		updateSrvTable(app_name, {
+			srv_sum: Math.round(srv_alc),
+			srv_used: Math.round(srv_alc - srv_free),
+			srv_free: Math.round(srv_free),
+			srv_percent: Math.round(10000 - srv_free / srv_alc * 10000) / 100
+		})
+		updateSysChart(app_name, chart_data);
+		updateSrvChart(app_name, chart_data);
+	} else {
+		console.log(obj);
 	}
 }
 
 function reqTestData(app_name, limit) {
 	if (!limit) {
 		limit = 20;
-	} 
+	}
 	$.ajax({
 		url: `http://${host}:${port}/api/gm/test-info/?app_name=${app_name}&limit=${limit}`,
 		type: 'GET',
-		success: function (data) {
+		success: function (obj) {
 			// loadAppData(app_name, data);
-			console.log(data)
+			console.log(obj)
 		},
 		error: function () { }
 	});
@@ -249,7 +270,7 @@ function reqTestData(app_name, limit) {
 function reqErrData(app_name, limit) {
 	if (!limit) {
 		limit = 1000;
-	} 
+	}
 	$.ajax({
 		url: `http://${host}:${port}/api/gm/catch-err/?app_name=${app_name}&limit=${limit}`,
 		type: 'GET',
@@ -264,6 +285,5 @@ function reqErrData(app_name, limit) {
 reqAppList();
 // setInterval(reqAppList, 5000);
 
-reqAppData('joke-api');
-console.log('hhhhh')
+reqSysData('joke-api');
 reqErrData('joke-api');

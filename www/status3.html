@@ -27,31 +27,33 @@
 	</header>
 
 	<main class="mt-5">
-		<div class="container">
-			<div>
-				<h1>App 001</h1>
+		<div class="container" id="info">
+			<div id="info-temp" hidden>
+				<h1>$app_name$ - $app_status$</h1>
 				<hr>
 				<section>
 					<h3>System Memory (MB)</h3>
 					<div class="row">
 						<div class="col-md-7 mb-4">
-							<canvas id="joke-api-sys-mem"></canvas>
+							<canvas id="$app_name$-sys-mem"></canvas>
 						</div>
 						<div class="col-md-5 mb-4">
-							<h5>Status:
-								<span class="mx-1">Running</span>
+							<h5>Total:
+								<span class="mx-1" id="$app_name$-sys-sum"></span>
 							</h5>
 							<hr>
-							<h5>API Number:
-								<span class="mx-1">14</span>
+							<h5>Free:
+								<span class="mx-1" id="$app_name$-sys-free"></span>
 							</h5>
 							<hr>
-							<h5>Test Time:
-								<span class="mx-1">2017-12-18</span>
+
+							<h5>Used:
+								<span class="mx-1" id="$app_name$-sys-used"></span>
 							</h5>
+
 							<hr>
-							<h5>Test Result:
-								<span class="mx-1">Success</span>
+							<h5>Used %:
+								<span class="mx-1" id="$app_name$-sys-percent"></span>
 							</h5>
 						</div>
 					</div>
@@ -60,23 +62,23 @@
 					<h3>APP Service Memory (MB)</h3>
 					<div class="row">
 						<div class="col-md-7 mb-4">
-							<canvas id="joke-api-srv-mem"></canvas>
+							<canvas id="$app_name$-srv-mem"></canvas>
 						</div>
 						<div class="col-md-5 mb-4">
-							<h5>Status:
-								<span class="mx-1">Running</span>
+							<h5>Allocated:
+								<span class="mx-1" id="$app_name$-srv-sum"></span>
 							</h5>
 							<hr>
-							<h5>API Number:
-								<span class="mx-1">14</span>
+							<h5>Free:
+								<span class="mx-1" id="$app_name$-srv-free"></span>
 							</h5>
 							<hr>
-							<h5>Test Time:
-								<span class="mx-1">2017-12-18</span>
+							<h5>Used:
+								<span class="mx-1" id="$app_name$-srv-used"></span>
 							</h5>
 							<hr>
-							<h5>Test Result:
-								<span class="mx-1">Success</span>
+							<h5>Used %:
+								<span class="mx-1" id="$app_name$-srv-percent"></span>
 							</h5>
 						</div>
 					</div>
