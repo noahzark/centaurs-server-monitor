@@ -179,7 +179,33 @@ router.get('/test-info', (req, res) => {
 						if (err) {
 							console.log(`[MongoDB][ERR] ${err}`);
 						} else {
-							var tmp = {};
+							var tmp = {}
+							for (var i = 0; i < logs.length; i++) {
+								if (logs[i]) {
+									tmp.time = logs[i].time;
+									tmp.msg = logs[i].msg;
+									data.push(tmp);
+								} else {
+									break;
+								}
+							}
+							res_obj.retcode = 0;
+							res_obj.msg = "success";
+							res_obj.data = data;
+							res.send(JSON.stringify(res_obj));
+						}
+					});
+				}
+			});
+		} catch (err) {
+			console.error(err);
+			res_obj = {};
+			res_obj.retcode = 1;
+			res_obj.msg = "request error"
+			res.send(JSON.stringify(res_obj));
+		}
+	}
+});
 							for (var i = 0; i < logs.length; i++) {
 								data[i].test_time = logs[i].time;
 								data[i].test_msg = logs[i].msg;
