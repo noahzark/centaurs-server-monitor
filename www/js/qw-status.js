@@ -24,19 +24,18 @@ function updateApiChart(app_name, chart_data) {
 		color_bg = [],
 		color_bd = [];
 
-		chart_data= ['','','','','','',''];
-
-		for (var i = 0; i < chart_data.length; i++) {
+		for (var i = 0; i < chart_data.labels.length; i++) {
 			color_bg.push(color_bg_enum[i % 6]);
 			color_bd.push(color_bd_enum[i % 6]);
 		}
+
 		var myBarChart = new Chart(ctxB, {
 			type: 'bar',
 			data: {
-				labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange", "h"],
+				labels: chart_data.labels,
 				datasets: [{
 					label: 'Time of Api Request (ms)',
-					data: [12, 19, 3, 5, 2, 3, 9],
+					data: chart_data.data,
 					backgroundColor: color_bg,
 					borderColor: color_bd,
 					borderWidth: 1
@@ -262,22 +261,6 @@ function reqSysData(app_name, limit) {
 	});
 }
 
-function reqApiTime(app_name, limit) {
-	if (!limit) {
-		limit = 1;
-	}
-	$.ajax({
-		url: `http://${host}:${port}/api/gm/api-time/?app_name=${app_name}&limit=${limit}`,
-		type: 'GET',
-		success: (obj) => {
-			console.log(obj)
-		},
-		error: (err) => {
-			console.log(`request ${app_name} api time failed`);
-		}
-	});
-}
-
 function loadSysData(app_name, obj) {
 	if (obj && obj.retcode == 0) {
 		var data = obj.data,
@@ -336,6 +319,44 @@ function loadSysData(app_name, obj) {
 		updateSrvChart(app_name, chart_data);
 	} else {
 		console.log(obj);
+	}
+}
+
+function reqApiTime(app_name, limit) {
+	if (!limit) {
+		limit = 1;
+	}
+	$.ajax({
+		url: `http://${host}:${port}/api/gm/api-time/?app_name=${app_name}&limit=${limit}`,
+		type: 'GET',
+		success: (obj) => {
+			loadApiTime(app_name, obj);
+		},
+		error: (err) => {
+			console.log(`request ${app_name} api time failed`);
+		}
+	});
+}
+
+function loadApiTime(app_name, obj) {
+	if (obj && obj.retcode == 0) {
+		var data = obj.data,
+			chart_data = {};
+
+		chart_data.labels = [];
+		chart_data.data = [];
+
+		for (const prop in data) {
+			chart_data.labels.push(prop);
+			chart_data.data.push(data[prop][0]);
+		}
+
+		updateApiChart(app_name, {
+			labels: chart_data.labels,
+			data: chart_data.data
+		});
+	} else {
+		// console.log(obj);
 	}
 }
 
