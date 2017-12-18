@@ -3,6 +3,58 @@ var host = 'localhost',
 	port = '10021',
 	app_list = [];
 
+function updateApiChart(app_name, chart_data) {
+		var ctxB = document.getElementById(`${app_name}-api-time-chart`).getContext('2d'),
+		color_bg_enum = [
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(255, 206, 86, 0.2)',
+			'rgba(75, 192, 192, 0.2)',
+			'rgba(153, 102, 255, 0.2)',
+			'rgba(255, 159, 64, 0.2)'
+		],
+		color_bd_enum = [
+			'rgba(255,99,132,1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(255, 206, 86, 1)',
+			'rgba(75, 192, 192, 1)',
+			'rgba(153, 102, 255, 1)',
+			'rgba(255, 159, 64, 1)'
+		],
+		color_bg = [],
+		color_bd = [];
+
+		chart_data= ['','','','','','',''];
+
+		for (var i = 0; i < chart_data.length; i++) {
+			color_bg.push(color_bg_enum[i % 6]);
+			color_bd.push(color_bd_enum[i % 6]);
+		}
+		var myBarChart = new Chart(ctxB, {
+			type: 'bar',
+			data: {
+				labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange", "h"],
+				datasets: [{
+					label: 'Time of Api Request (ms)',
+					data: [12, 19, 3, 5, 2, 3, 9],
+					backgroundColor: color_bg,
+					borderColor: color_bd,
+					borderWidth: 1
+				}]
+			},
+			options: {
+				animation: false,
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}]
+				}
+			}
+		});
+	};
+
 function updateSysChart(app_name, chart_data) {
 	var ctxL = document.getElementById(`${app_name}-sys-mem`).getContext('2d');
 	var myLineChart = new Chart(ctxL, {
