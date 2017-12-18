@@ -14,7 +14,10 @@ var ApplistSchema = mongoose.Schema({
     },
     status: {
 		type: String,
-	}
+    },
+    apis: {
+        type: [String],
+    }
 }, {
     timestamps: true
 });

@@ -120,11 +120,8 @@ module.exports.updateApplist = function (app, callback) {
 	if (app.status) {
 		doc.status = app.status;
 	}
-	if (app.start_time) {
-		doc.start_time = app.start_time;
-	}
-	if (app.end_time) {
-		doc.end_time = app.end_time;
+	if (app.apis) {
+		doc.apis = app.apis;
 	}
 	Applist.findOneAndUpdate(query, doc, opt).exec(callback);
 }
