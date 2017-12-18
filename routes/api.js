@@ -278,6 +278,33 @@ router.get('/catch-err', (req, res) => {
 	}
 });
 
+router.get('/api-path', (req, res) => {
+	var res_obj = {},
+		app_name = req.query.app_name;
+	if (!app_name) {
+		res_obj.retcode = 2;
+		res_obj.msg = "no app name"
+		res.send(JSON.stringify(res_obj));
+	} else {
+		LogService.getApp(app_name, (err, app) => {
+			if (err) {
+				console.log(`[MongoDB][ERR][getApplist] ${err}`);
+			} else {
+				if (app.apis) {
+					res_obj.retcode = 0;
+					res_obj.msg = "success";
+					res_obj.data = app.apis;
+					res.send(JSON.stringify(res_obj));
+				} else {
+					res_obj.retcode = 1;
+					res_obj.msg = "no api path timed"
+					res.send(JSON.stringify(res_obj));
+				}
+			}
+		});
+	}
+})
+
 router.post('/server-info', function (req, res, err) {
 	try {
 		if (!req.body) {
