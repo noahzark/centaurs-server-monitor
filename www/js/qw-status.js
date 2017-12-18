@@ -354,6 +354,33 @@ function loadErrData(app_name, obj) {
     }
 }
 
+function reqApiPath(app_name) {
+	if (!app_name) {
+		return;
+	}
+    $.ajax({
+        url: `http://${host}:${port}/api/gm/api-path/?app_name=${app_name}`,
+        type: 'GET',
+        success: function (obj) {
+            loadApiPath(app_name, obj);
+        },
+        error: function (err) {
+            console.log(`[ERR] req ${app_name} api path failed. ${err}`);
+        }
+    });
+}
+
+function loadApiPath(app_name, obj) {
+    if (obj.retcode == 0) {
+        console.log(obj);
+    } else {
+		console.log(`Load ${app_name} api pathes failed.`)
+		console.log(obj);
+    }
+}
+
+reqApiPath('chewrobot-tool');
+
 reqAppList();
 setInterval(reqAppList, 10 * 1000);
 
