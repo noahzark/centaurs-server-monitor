@@ -52,7 +52,7 @@ function updateSysChart(app_name, chart_data) {
         },
         options: {
             responsive: true,
-            animation : false
+            animation: false
         }
     });
 };
@@ -107,7 +107,7 @@ function updateSrvChart(app_name, chart_data) {
         },
         options: {
             responsive: true,
-            animation : false
+            animation: false
         }
     });
 };
@@ -149,7 +149,7 @@ function reqAppList() {
         url: `http://${host}:${port}/api/gm/applist`,
         type: 'GET',
         success: loadAppList,
-        error: function (err) { 
+        error: function (err) {
             console.log(`[ERR] req app list failed. ${err}`);
         }
     });
@@ -170,7 +170,7 @@ function loadAppList(obj) {
             if (myElem === null) {
                 $("#info").append(`<div id='${app_name}'>${resHtml}</div>`);
                 $("#navbar-app-list-items").append(`<a class="dropdown-item" href="#${app_name}">${app_name}</a>`)
-            } 
+            }
             reqSysData(app_name);
             reqErrData(app_name);
             reqTestData(app_name);
@@ -279,14 +279,15 @@ function loadTestData(app_name, obj) {
         for (var i = 0; i < data.length; i++) {
             var date = data[i].time.split('T')[0],
                 time = data[i].time.split('T')[1].split('.')[0],
-                test =
+                test_res = data[i].msg,
+                test_html =
                     `<tr>
 			        <th scope="row">${i + 1}</th>
 			        <td>${date}</td>
 			        <td>${time}</td>
-			        <td>${data[i].msg}</td>
+			        <td>${test_res}</td>
 			        </tr>`;
-            $(table_id).append(test);
+            $(table_id).append(test_html);
         }
     } else {
         console.log(`Load ${app_name} test records failed.`)
@@ -314,17 +315,26 @@ function loadErrData(app_name, obj) {
     if (obj.retcode == 0) {
         data = obj.data;
         $(table_id).html('');
+        var index = 1,
+            prev_err = '';
         for (var i = 0; i < data.length; i++) {
             var date = data[i].time.split('T')[0],
                 time = data[i].time.split('T')[1].split('.')[0],
-                err =
+                err = data[i].err;
+            if (prev_err != err) {
+                var err_fmt = err.replace(/\n/g, '<br>');
+                var err_html =
                     `<tr>
-			        <th scope="row">${i + 1}</th>
+			        <th scope="row">${index}</th>
 			        <td>${date}</td>
 			        <td>${time}</td>
-			        <td>${data[i].err}</td>
+			        <td>${err_fmt}</td>
 			        </tr>`;
-            $(table_id).append(err);
+                $(table_id).append(err_html);
+                index++;
+                prev_err = err;
+            }
+
         }
     } else {
         console.log(`Load ${app_name} error records failed.`)
