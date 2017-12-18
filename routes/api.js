@@ -31,10 +31,10 @@ if (config.has('time_interval_limit')) {
 var updateApplistCache = () => {
 	LogService.getApplist((err, list) => {
 		if (err) {
-			console.log(`[MongoDB][ERR] ${err}`);
+			console.log(`[MongoDB][ERR][getApplist] ${err}`);
 		} else {
 			app_list = list;
-			console.log(`[MongoDB][MSG] app_list is updated`);
+			console.log(`[Cache][MSG] app_list is updated`);
 		}
 	});
 }
@@ -44,7 +44,7 @@ var sysCheckTime = (app_check_interval) => {
 		var now = Date.now();
 		LogService.getApplist((err, list) => {
 			if (err) {
-				console.log(`[MongoDB][ERR] ${err}`);
+				console.log(`[MongoDB][ERR][getApplist] ${err}`);
 			} else {
 				app_list = list;
 			}
@@ -59,7 +59,7 @@ var sysCheckTime = (app_check_interval) => {
 					name: app_name,
 					status: 'offline'
 				}, (err) => {
-					console.log(`[MongoDB][ERR] ${err}`);
+					console.log(`[MongoDB][ERR][updateApplist] ${err}`);
 				})
 			}
 		}
@@ -129,7 +129,7 @@ router.get('/server-info', (req, res) => {
 				LogService.getSysLog(app_name, limit, (err, logs) => {
 					var data = []
 					if (err) {
-						console.log(`[MongoDB][ERR] ${err}`);
+						console.log(`[MongoDB][ERR][getSysLog] ${err}`);
 					} else {
 						for (var i = 0; i < logs.length; i++) {
 							var tmp = {};
@@ -173,11 +173,11 @@ router.get('/test-info', (req, res) => {
 			LogService.getSysLog(app_name, limit, (err, logs) => {
 				var data = []
 				if (err) {
-					console.log(`[MongoDB][ERR] ${err}`);
+					console.log(`[MongoDB][ERR][getSysLog] ${err}`);
 				} else {
 					LogService.getTestLog(app_name, limit, (err, logs) => {
 						if (err) {
-							console.log(`[MongoDB][ERR] ${err}`);
+							console.log(`[MongoDB][ERR][getTestLog] ${err}`);
 						} else {
 							for (var i = 0; i < logs.length; i++) {
 								if (logs[i]) {
@@ -221,32 +221,25 @@ router.get('/catch-err', (req, res) => {
 		res.header("Content-Type", "application/json;charset=UTF-8");
 		try {
 			LogService.getErrLog(app_name, limit, (err, logs) => {
-				var data = []
-				if (err) {
-					console.log(`[MongoDB][ERR] ${err}`);
-				} else {
-					LogService.getErrLog(app_name, limit, (err, logs) => {
-						if (err) {
-							console.log(`[MongoDB][ERR] ${err}`);
-						} else {
-							for (var i = 0; i < logs.length; i++) {
-								if (logs[i]) {
-                                    var tmp = {};
-									tmp.time = logs[i].createdAt;
-									tmp.err = logs[i].err;
-									data.push(tmp);
-								} else {
-									break;
-								}
-							}
-							res_obj.retcode = 0;
-							res_obj.msg = "success";
-							res_obj.data = data;
-							res.send(JSON.stringify(res_obj));
-						}
-					});
-				}
-			});
+                if (err) {
+                    console.log(`[MongoDB][ERR][getErrLog] ${err}`);
+                } else {
+                    for (var i = 0; i < logs.length; i++) {
+                        if (logs[i]) {
+                            var tmp = {};
+                            tmp.time = logs[i].createdAt;
+                            tmp.err = logs[i].err;
+                            data.push(tmp);
+                        } else {
+                            break;
+                        }
+                    }
+                    res_obj.retcode = 0;
+                    res_obj.msg = "success";
+                    res_obj.data = data;
+                    res.send(JSON.stringify(res_obj));
+                }
+            });
 		} catch (err) {
 			console.error(err);
 			res_obj = {};
@@ -270,7 +263,7 @@ router.post('/server-info', function (req, res, err) {
 				status: 'running'
 			}, (err) => {
 				if (err) {
-					console.log(`[MongoDB][ERR] ${err}`);
+					console.log(`[MongoDB][ERR][updateApplist] ${err}`);
 				} else {
 					updateApplistCache();
 				}
@@ -280,7 +273,7 @@ router.post('/server-info', function (req, res, err) {
 			app_check_time_list[info.app_name] = info.next_time;
 			var res_obj = {};
 			if (err) {
-				console.log(`[MongoDB][ERR] ${err}`);
+				console.log(`[MongoDB][ERR][addSysLog] ${err}`);
 			} else {
 				res_obj.retcode = 0;
 				res_obj.msg = "success";
@@ -310,7 +303,7 @@ router.post('/test-info', function (req, res, err) {
 				status: 'running'
 			}, (err) => {
 				if (err) {
-					console.log(`[MongoDB][ERR] ${err}`);
+					console.log(`[MongoDB][ERR][updateApplist] ${err}`);
 				} else {
 					updateApplistCache();
 				}
@@ -322,7 +315,7 @@ router.post('/test-info', function (req, res, err) {
 		LogService.addTestLog(info, (err) => {
 			var res_obj = {};
 			if (err) {
-				console.log(`[MongoDB][ERR] ${err}`);
+				console.log(`[MongoDB][ERR][addTestLog] ${err}`);
 			} else {
 				res_obj.retcode = 0;
 				res_obj.msg = "success";
@@ -351,7 +344,7 @@ router.post('/catch-err', function (req, res, err) {
 				status: 'running'
 			}, (err) => {
 				if (err) {
-					console.log(`[MongoDB][ERR] ${err}`);
+					console.log(`[MongoDB][ERR][updateApplist] ${err}`);
 				} else {
 					updateApplistCache();
 				}
@@ -363,7 +356,7 @@ router.post('/catch-err', function (req, res, err) {
 		LogService.addErrLog(info, (err) => {
 			var res_obj = {};
 			if (err) {
-				console.log(`[MongoDB][ERR] ${err}`);
+				console.log(`[MongoDB][ERR][addErrLog] ${err}`);
 			} else {
 				res_obj.retcode = 0;
 				res_obj.msg = "success";
@@ -392,7 +385,7 @@ router.post('/api-time', function (req, res, err) {
 				status: 'running'
 			}, (err) => {
 				if (err) {
-					console.log(`[MongoDB][ERR] ${err}`);
+					console.log(`[MongoDB][ERR][updateApplist] ${err}`);
 				} else {
 					updateApplistCache();
 				}
@@ -404,7 +397,7 @@ router.post('/api-time', function (req, res, err) {
 		LogService.addUsageLog(info, (err) => {
 			var res_obj = {};
 			if (err) {
-				console.log(`[MongoDB][ERR] ${err}`);
+				console.log(`[MongoDB][ERR][addUsageLog] ${err}`);
 			} else {
 				res_obj.retcode = 0;
 				res_obj.msg = "success";
