@@ -134,6 +134,17 @@ function updateSrvTable(app_name, data) {
     percent.innerHTML = data.srv_percent + ' %';
 }
 
+function updateStatus(app_name,status) {
+    id=`#${app_name}-status`;
+    $(id).removeClass('red green');
+    if (status == 'running') {
+        $(id).addClass('green')
+    } else {
+        $(id).addClass('red');
+    }
+    $(id).html(status);
+}
+
 String.prototype.temp = function (obj) {
     return this.replace(/\$\w+\$/gi, function (matches) {
         var ret = obj[matches.replace(/\$/g, '')];
@@ -163,14 +174,16 @@ function loadAppList(obj) {
             var tempInfoHtml = $('#info-temp').html();
             var resObj = {},
                 app_name = applist[i].name;
+                status = applist[i].status;
             resObj.app_name = app_name;
-            resObj.app_status = applist[i].status;
+            resObj.app_status = status;
             var resHtml = tempInfoHtml.temp(resObj),
                 myElem = document.getElementById(app_name);
             if (myElem === null) {
                 $("#info").append(`<div id='${app_name}'>${resHtml}</div>`);
                 $("#navbar-app-list-items").append(`<a class="dropdown-item" href="#${app_name}">${app_name}</a>`)
             }
+            updateStatus(app_name, status);
             reqSysData(app_name);
             reqErrData(app_name);
             reqTestData(app_name);
