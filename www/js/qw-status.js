@@ -158,7 +158,6 @@ function reqAppList() {
 function loadAppList(obj) {
     if (obj && obj.retcode == 0) {
         applist = obj.data;
-        console.log(applist);
 
         for (var i = 0; i < applist.length; i++) {
             var tempInfoHtml = $('#info-temp').html();
@@ -333,5 +332,5 @@ function loadErrData(app_name, obj) {
 }
 
 reqAppList();
-setInterval(reqAppList, 5000);
+setInterval(reqAppList, 10 * 1000);
 
