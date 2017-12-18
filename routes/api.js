@@ -66,9 +66,8 @@ var sysCheckTime = (app_check_interval) => {
 
 	// load api time 
 	var loadApiTime = () => {
-		for (var i = 0; i < app_list.length; i++) {
-			var app_name = app_list[i],
-			limit = 1;
+		var limit = 1;
+		app_list.forEach((app_name) => {
 			if (!app_api_time[app_name]) {
 				app_api_time[app_name] = {};
 			}
@@ -78,8 +77,8 @@ var sysCheckTime = (app_check_interval) => {
 				} else {
 					var paths = app.apis;
 					if (paths) {
-						for (var i = 0; i < paths.length; i++) {
-							LogService.getApiUsageLog(app_name, paths[i], limit, (err, api) => {
+						paths.forEach((path) => {
+							LogService.getApiUsageLog(app_name, path, limit, (err, api) => {
 								if (err) {
 									console.log(`[MongoDB][ERR][getApiUsageLog] ${err}`);
 								} else if (api.length > 0) {
@@ -90,11 +89,11 @@ var sysCheckTime = (app_check_interval) => {
 									}
 								}
 							});
-						}
-					} 
+						});
+					}
 				}
 			});
-		}
+		});
 	}
 
 	// load app list
