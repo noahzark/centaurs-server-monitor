@@ -48,8 +48,7 @@ var updateApplistCache = (next) => {
 var sysCheckTime = (app_check_interval) => {
 	updateApplistCache(() => {
 		// make every app status offline
-		for (var i = 0; i < app_list.length; ++i) {
-			var app_name = app_list[i];
+		app_list.forEach((app_name) => {
 			LogService.updateApplist(
 				{
 					name: app_name,
@@ -61,7 +60,7 @@ var sysCheckTime = (app_check_interval) => {
 				}
 			);
 			console.log(`[Init][MSG] init ${app_name} offline`);
-		}
+		});
 	});
 
 	// load api time 
@@ -116,6 +115,7 @@ var sysCheckTime = (app_check_interval) => {
 		}
 	};
 	loadAppList();
+	loadApiTime();
 	setInterval(loadAppList, app_check_interval);
 	setInterval(loadApiTime, app_check_interval);
 }
