@@ -179,12 +179,12 @@ router.get('/test-info', (req, res) => {
 						if (err) {
 							console.log(`[MongoDB][ERR] ${err}`);
 						} else {
-							var tmp = {}
 							for (var i = 0; i < logs.length; i++) {
 								if (logs[i]) {
-									tmp.time = logs[i].time;
+                                    var tmp = {};
+									tmp.time = logs[i].createdAt;
 									tmp.msg = logs[i].msg;
-									data.push(tmp);
+                                    data.push(tmp);
 								} else {
 									break;
 								}
@@ -229,10 +229,10 @@ router.get('/catch-err', (req, res) => {
 						if (err) {
 							console.log(`[MongoDB][ERR] ${err}`);
 						} else {
-							var tmp = {}
 							for (var i = 0; i < logs.length; i++) {
 								if (logs[i]) {
-									tmp.time = logs[i].time;
+                                    var tmp = {};
+									tmp.time = logs[i].createdAt;
 									tmp.err = logs[i].err;
 									data.push(tmp);
 								} else {
