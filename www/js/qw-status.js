@@ -169,9 +169,10 @@ function loadAppList(obj) {
                 myElem = document.getElementById(app_name);
             if (myElem === null) {
                 $("#info").append(`<div id='${app_name}'>${resHtml}</div>`);
-            } else {
-                myElem.innerHTML = resHtml;
-            }
+            } 
+            reqSysData(app_name);
+            reqErrData(app_name);
+            reqTestData(app_name);
         }
     }
 }
@@ -328,8 +329,5 @@ function loadErrData(app_name, obj) {
 }
 
 reqAppList();
-// setInterval(reqAppList, 5000);
+setInterval(reqAppList, 5000);
 
-reqSysData('joke-api');
-reqErrData('joke-api');
-reqTestData('joke-api');
