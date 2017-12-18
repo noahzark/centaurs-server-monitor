@@ -2,170 +2,179 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Monitor Server Dashboard</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Material Design Bootstrap -->
-    <link href="css/mdb.min.css" rel="stylesheet">
-    <!-- Custom styles -->
-    <link href="css/qw-status.css" rel="stylesheet">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Monitor Server Dashboard</title>
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<!-- Bootstrap core CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- Material Design Bootstrap -->
+	<link href="css/mdb.min.css" rel="stylesheet">
+	<!-- Custom styles -->
+	<link href="css/qw-status.css" rel="stylesheet">
 </head>
 
 <body>
 
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark indigo fixed-top">
-            <div class="container">
-                <a class="navbar-brand" href="#">Monitor Server</a>
-                <!-- Collapse button -->
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark indigo fixed-top">
+			<div class="container">
+				<a class="navbar-brand" href="#">Monitor Server</a>
+				<!-- Collapse button -->
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+				 aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
 
-                <!-- Collapsible content -->
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<!-- Collapsible content -->
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-                    <!-- Links -->
-                    <ul class="navbar-nav mr-auto">
-                        <!-- Dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbar-app-list-head" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">App List</a>
-                            <div class="dropdown-menu dropdown-primary" aria-labelledby="navbar-app-list-head" id="navbar-app-list-items">
-                            </div>
-                        </li>
-                    </ul>
-                    <!-- Links -->
-                </div>
-                <!-- Collapsible content -->
-            </div>
-        </nav>
-    </header>
+					<!-- Links -->
+					<ul class="navbar-nav mr-auto">
+						<!-- Dropdown -->
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" id="navbar-app-list-head" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">App List</a>
+							<div class="dropdown-menu dropdown-primary" aria-labelledby="navbar-app-list-head" id="navbar-app-list-items">
+							</div>
+						</li>
+					</ul>
+					<!-- Links -->
+				</div>
+				<!-- Collapsible content -->
+			</div>
+		</nav>
+	</header>
 
-    <main class="my-5">
-        <div class="container" id="info">
-            <div id="info-temp" hidden>
-                <br>
-                <br>
-                <br>
-                <h1>$app_name$ <span class="badge badge-pill red" id="$app_name$-status">$app_status$</span></h1>
-                <hr>
-                <section>
-                    <h3>System Memory (MB)</h3>
-                    <div class="row">
-                        <div class="col-md-7 mb-4">
-                            <canvas id="$app_name$-sys-mem"></canvas>
-                        </div>
-                        <div class="col-md-5 mb-4">
-                            <h5>Total:
-                                <span class="mx-1" id="$app_name$-sys-sum"></span>
-                            </h5>
-                            <hr>
-                            <h5>Free:
-                                <span class="mx-1" id="$app_name$-sys-free"></span>
-                            </h5>
-                            <hr>
+	<main class="my-5">
+		<div class="container" id="info">
+			<div id="info-temp" hidden>
+				<br>
+				<br>
+				<br>
+				<h1>$app_name$
+					<span class="badge badge-pill red" id="$app_name$-status">$app_status$</span>
+				</h1>
+				<hr>
+				<section>
+					<h3>System Memory (MB)</h3>
+					<div class="row">
+						<div class="col-md-7 mb-4">
+							<canvas id="$app_name$-sys-mem"></canvas>
+						</div>
+						<div class="col-md-5 mb-4">
+							<h5>Total:
+								<span class="mx-1" id="$app_name$-sys-sum"></span>
+							</h5>
+							<hr>
+							<h5>Free:
+								<span class="mx-1" id="$app_name$-sys-free"></span>
+							</h5>
+							<hr>
 
-                            <h5>Used:
-                                <span class="mx-1" id="$app_name$-sys-used"></span>
-                            </h5>
+							<h5>Used:
+								<span class="mx-1" id="$app_name$-sys-used"></span>
+							</h5>
 
-                            <hr>
-                            <h5>Used %:
-                                <span class="mx-1" id="$app_name$-sys-percent"></span>
-                            </h5>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <h3>APP Service Memory (MB)</h3>
-                    <div class="row">
-                        <div class="col-md-7 mb-4">
-                            <canvas id="$app_name$-srv-mem"></canvas>
-                        </div>
-                        <div class="col-md-5 mb-4">
-                            <h5>Allocated:
-                                <span class="mx-1" id="$app_name$-srv-sum"></span>
-                            </h5>
-                            <hr>
-                            <h5>Free:
-                                <span class="mx-1" id="$app_name$-srv-free"></span>
-                            </h5>
-                            <hr>
-                            <h5>Used:
-                                <span class="mx-1" id="$app_name$-srv-used"></span>
-                            </h5>
-                            <hr>
-                            <h5>Used %:
-                                <span class="mx-1" id="$app_name$-srv-percent"></span>
-                            </h5>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <h3>API Time</h3>
-                </section>
-                <section>
-                    <h3>Test</h3>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Result</th>
-                            </tr>
-                        </thead>
-                        <tbody id='$app_name$-test-table'>
-                        </tbody>
-                    </table>
-                </section>
-                <section>
-                    <h3>Error</h3>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Error</th>
-                            </tr>
-                        </thead>
-                        <tbody id='$app_name$-error-table'></tbody>
-                    </table>
-                </section>
-            </div>
-        </div>
-    </main>
+							<hr>
+							<h5>Used %:
+								<span class="mx-1" id="$app_name$-sys-percent"></span>
+							</h5>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3>APP Service Memory (MB)</h3>
+					<div class="row">
+						<div class="col-md-7 mb-4">
+							<canvas id="$app_name$-srv-mem"></canvas>
+						</div>
+						<div class="col-md-5 mb-4">
+							<h5>Allocated:
+								<span class="mx-1" id="$app_name$-srv-sum"></span>
+							</h5>
+							<hr>
+							<h5>Free:
+								<span class="mx-1" id="$app_name$-srv-free"></span>
+							</h5>
+							<hr>
+							<h5>Used:
+								<span class="mx-1" id="$app_name$-srv-used"></span>
+							</h5>
+							<hr>
+							<h5>Used %:
+								<span class="mx-1" id="$app_name$-srv-percent"></span>
+							</h5>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3>API Time</h3>
+					<div class="row" id="$app_name$-api-time">
+						<div class="col-md-7 mb-4">
+							<canvas id="$app_name$-api-time-chart"></canvas>
+						</div>
+						<div class="col-md-5 mb-4" id="$app_name$-api-paths">
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3>Test</h3>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Date</th>
+								<th>Time</th>
+								<th>Result</th>
+							</tr>
+						</thead>
+						<tbody id='$app_name$-test-table'>
+						</tbody>
+					</table>
+				</section>
+				<section>
+					<h3>Error</h3>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Date</th>
+								<th>Time</th>
+								<th>Error</th>
+							</tr>
+						</thead>
+						<tbody id='$app_name$-error-table'></tbody>
+					</table>
+				</section>
+			</div>
+		</div>
+	</main>
 
-    <footer class="page-footer blue center-on-small-only unique-color-dark pt-0">
+	<footer class="page-footer blue center-on-small-only unique-color-dark pt-0">
 
-        <div class="footer-copyright">
-            <div class="container-fluid">
-                © 2017
-                <a href="https://www.centaurstech.com/"> Centaurs Technologies Co. Ltd </a>
-                All Rights Reserved.
-            </div>
-        </div>
+		<div class="footer-copyright">
+			<div class="container-fluid">
+				© 2017
+				<a href="https://www.centaurstech.com/"> Centaurs Technologies Co. Ltd </a>
+				All Rights Reserved.
+			</div>
+		</div>
 
-    </footer>
+	</footer>
 
-    <!-- SCRIPTS -->
-    <!-- JQuery -->
-    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-    <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="js/popper.min.js"></script>
-    <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="js/mdb.min.js"></script>
-    <!-- Custom JavaScript -->
-    <script type="text/javascript" src="js/qw-status.js"></script>
+	<!-- SCRIPTS -->
+	<!-- JQuery -->
+	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	<!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="js/popper.min.js"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="js/mdb.min.js"></script>
+	<!-- Custom JavaScript -->
+	<script type="text/javascript" src="js/qw-status.js"></script>
 
 </body>
 
