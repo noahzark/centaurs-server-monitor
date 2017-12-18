@@ -51,7 +51,8 @@ function updateSysChart(app_name, chart_data) {
             ]
         },
         options: {
-            responsive: true
+            responsive: true,
+            animation : false
         }
     });
 };
@@ -105,7 +106,8 @@ function updateSrvChart(app_name, chart_data) {
             ]
         },
         options: {
-            responsive: true
+            responsive: true,
+            animation : false
         }
     });
 };
