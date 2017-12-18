@@ -11,7 +11,7 @@ var mongo = require('mongodb'),
 	config = require('config'),
 	opts = {
 		server: 'localhost',
-		port: 27017,
+		port: 27018,
 		db: 'qw-monitor'
 	};
 
