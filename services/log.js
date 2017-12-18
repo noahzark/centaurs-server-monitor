@@ -133,3 +133,15 @@ module.exports.updateApplist = function (app, callback) {
 module.exports.getApplist = (callback) => {
 	Applist.find().exec(callback);
 }
+
+/**
+ * get app
+ * @param {string} app_name 
+ * @param {function} callback 
+ */
+module.exports.getApp = (app_name, callback) => {
+	if (app_name) {
+		var query = { 'app_name': app_name };
+		Applist.find(query).exec(callback);
+	}
+}

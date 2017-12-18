@@ -401,18 +401,32 @@ router.post('/api-time', function (req, res, err) {
 		}
 		var info = req.body;
 		console.log(`[Receive][Time] ${JSON.stringify(info)}`);
-		LogService.updateApplist(
-			{
-				name: info.app_name,
-				status: 'running'
-			}, (err) => {
-				if (err) {
-					console.log(`[MongoDB][ERR][updateApplist] ${err}`);
-				} else {
-					updateApplistCache();
+		var api_list = [];
+		LogService.getApp(info.app_name, (err, app) => {
+			if (err) {
+				console.log(`[MongoDB][ERR][getApplist] ${err}`);
+			} else {
+				if (app.apis) {
+					api_list = app.apis;
 				}
+				if (api_list.indexOf(info.api_path) < 0) {
+					api_list.push(info.api_path);
+				}
+				LogService.updateApplist(
+					{
+						name: info.app_name,
+						status: 'running',
+						apis: api_list
+					}, (err) => {
+						if (err) {
+							console.log(`[MongoDB][ERR][updateApplist] ${err}`);
+						} else {
+							updateApplistCache();
+						}
+					}
+				);
 			}
-		);
+		});
 		LogService.addUsageLog(info, (err) => {
 			var res_obj = {};
 			if (err) {
