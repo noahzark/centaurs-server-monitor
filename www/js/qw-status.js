@@ -274,6 +274,7 @@ function loadTestData(app_name, obj) {
     var table_id = `#${app_name}-test-table`;
     if (obj.retcode == 0) {
         data = obj.data;
+        $(table_id).html('');
         for (var i = 0; i < data.length; i++) {
             var date = data[i].time.split('T')[0],
                 time = data[i].time.split('T')[1].split('.')[0],
@@ -311,6 +312,7 @@ function loadErrData(app_name, obj) {
     var table_id = `#${app_name}-error-table`;
     if (obj.retcode == 0) {
         data = obj.data;
+        $(table_id).html('');
         for (var i = 0; i < data.length; i++) {
             var date = data[i].time.split('T')[0],
                 time = data[i].time.split('T')[1].split('.')[0],
