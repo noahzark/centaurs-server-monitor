@@ -14,8 +14,8 @@ var express = require('express'),
 	config = require('config'),
 	app_list = [],
 	app_check_time_list = {},	// app_name : next_time
-	app_check_interval = 1 * 1000,			// 1 ms dev default
-	time_interval_limit = 10 * 1000;		// 10 ms dev default
+	app_check_interval = 1 * 1000,			// 1 sec dev default
+	time_interval_limit = 10 * 1000;		// 10 sec dev default
 
 var EmailClient = require('../services/email'),
 	mode = process.env.NODE_ENV,
