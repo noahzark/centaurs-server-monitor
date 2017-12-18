@@ -241,6 +241,7 @@ function loadAppList(obj) {
 			reqErrData(app_name);
 			reqTestData(app_name);
 			reqApiPath(app_name);
+			reqApiTime(app_name);
 		}
 	}
 }
@@ -257,6 +258,22 @@ function reqSysData(app_name, limit) {
 		},
 		error: (err) => {
 			console.log(`request ${app_name} data failed`)
+		}
+	});
+}
+
+function reqApiTime(app_name, limit) {
+	if (!limit) {
+		limit = 1;
+	}
+	$.ajax({
+		url: `http://${host}:${port}/api/gm/api-time/?app_name=${app_name}&limit=${limit}`,
+		type: 'GET',
+		success: (obj) => {
+			console.log(obj)
+		},
+		error: (err) => {
+			console.log(`request ${app_name} api time failed`);
 		}
 	});
 }
