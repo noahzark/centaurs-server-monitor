@@ -169,6 +169,7 @@ function loadAppList(obj) {
                 myElem = document.getElementById(app_name);
             if (myElem === null) {
                 $("#info").append(`<div id='${app_name}'>${resHtml}</div>`);
+                $("#navbar-app-list-items").append(`<a class="dropdown-item" href="#${app_name}">${app_name}</a>`)
             } 
             reqSysData(app_name);
             reqErrData(app_name);
