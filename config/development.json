@@ -1,0 +1,14 @@
+{
+	"email": {
+		"username": "xxx@xxx.xxx",
+		"password": "xxxxxxxxx",
+		"domain": "smtp.xxx.com"
+	},
+	"db": {
+		"server": "localhost",
+		"port": 27017,
+		"db": "qw-monitor"
+	},
+	"app_check_interval": 10000,
+    "time_interval_limit": 60000
+}

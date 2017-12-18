@@ -1,0 +1,15 @@
+{
+	"email": {
+		"username": "monitor@qiwu.ai",
+		"password": "P6RKGyhpSTbpMb2xKhLbE44zQujKZERv",
+		"domain": "smtp.exmail.qq.com"
+	},
+	"db": {
+		"server": "localhost",
+		"port": 27018,
+		"db": "qw-monitor"
+	},
+	"app_check_interval": 10000,
+	"time_interval_limit": 60000
+}
+
