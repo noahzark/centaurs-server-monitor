@@ -1,5 +1,4 @@
-// var host = '47.88.77.157',
-var host = 'localhost',
+var host = '47.88.77.157',
     port = '10021',
     app_list = [];
 
