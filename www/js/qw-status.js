@@ -215,7 +215,7 @@ $().ready(function () {
 			type: 'GET',
 			success: loadAppList,
 			error: function (err) {
-				console.log(`[ERR] req app list failed. ${err}`);
+				console.log(`[ERR] req app list failed. ${JSON.stringify(err)}`);
 			}
 		});
 	}
@@ -335,7 +335,7 @@ $().ready(function () {
 				loadApiTime(app_name, obj);
 			},
 			error: (err) => {
-				console.log(`request ${app_name} api time failed`);
+				console.log(`request ${app_name} api time failed. ${JSON.stringify(err)}`);
 			}
 		});
 	}
@@ -373,7 +373,7 @@ $().ready(function () {
 				loadTestData(app_name, obj);
 			},
 			error: function (err) {
-				console.log(`[ERR] req ${app_name} test data failed. ${err}`);
+				console.log(`[ERR] req ${app_name} test data failed. ${JSON.stringify(err)}`);
 			}
 		});
 	}
@@ -412,7 +412,7 @@ $().ready(function () {
 				loadErrData(app_name, obj);
 			},
 			error: function (err) {
-				console.log(`[ERR] req ${app_name} err data failed. ${err}`);
+				console.log(`[ERR] req ${app_name} err data failed. ${JSON.stringify(err)}`);
 			}
 		});
 	}
@@ -459,7 +459,7 @@ $().ready(function () {
 				loadApiPath(app_name, obj);
 			},
 			error: function (err) {
-				console.log(`[ERR] req ${app_name} api path failed. ${err}`);
+				console.log(`[ERR] req ${app_name} api path failed. ${JSON.stringify(err)}`);
 			}
 		});
 	}
