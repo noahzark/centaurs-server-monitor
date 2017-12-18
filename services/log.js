@@ -141,7 +141,7 @@ module.exports.getApplist = (callback) => {
  */
 module.exports.getApp = (app_name, callback) => {
 	if (app_name) {
-		var query = { 'app_name': app_name };
-		Applist.find(query).exec(callback);
+		var query = { 'name': app_name };
+		Applist.findOne(query).exec(callback);
 	}
 }
