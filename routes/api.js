@@ -13,6 +13,7 @@ var express = require('express'),
 	util = require('util'),
 	config = require('config'),
 	app_list = [],
+	app_api_time = {},
 	app_check_time_list = {},	// app_name : next_time
 	app_check_interval = 1 * 1000,			// 1 sec dev default
 	time_interval_limit = 10 * 1000;		// 10 sec dev default
@@ -63,8 +64,41 @@ var sysCheckTime = (app_check_interval) => {
 		}
 	});
 
+	// load api time 
+	var loadApiTime = () => {
+		for (var i = 0; i < app_list.length; i++) {
+			var app_name = app_list[i],
+			limit = 1;
+			if (!app_api_time[app_name]) {
+				app_api_time[app_name] = {};
+			}
+			LogService.getApp(app_name, (err, app) => {
+				if (err) {
+					console.log(`[MongoDB][ERR][getApp] ${err}`);
+				} else {
+					var paths = app.apis;
+					if (paths) {
+						for (var i = 0; i < paths.length; i++) {
+							LogService.getApiUsageLog(app_name, paths[i], limit, (err, api) => {
+								if (err) {
+									console.log(`[MongoDB][ERR][getApiUsageLog] ${err}`);
+								} else if (api.length > 0) {
+									var api_path = api[0].api_path;
+									app_api_time[app_name][api_path] = [];
+									for (var i = 0; i < api.length; i++) {
+										app_api_time[app_name][api_path].push(api[i].time);
+									}
+								}
+							});
+						}
+					} 
+				}
+			});
+		}
+	}
+
 	// load app list
-	var check = () => {
+	var loadAppList = () => {
 		var now = Date.now();
 		updateApplistCache();
 		for (const app_name in app_check_time_list) {
@@ -82,8 +116,9 @@ var sysCheckTime = (app_check_interval) => {
 			}
 		}
 	};
-	check();
-	setInterval(check, app_check_interval);
+	loadAppList();
+	setInterval(loadAppList, app_check_interval);
+	setInterval(loadApiTime, app_check_interval);
 }
 
 sysCheckTime();
@@ -139,6 +174,9 @@ router.get('/server-info', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 10;
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header("Content-Type", "application/json;charset=UTF-8");
 	if (!app_name) {
 		res_obj.retcode = 2;
 		res_obj.msg = "no app name"
@@ -149,9 +187,7 @@ router.get('/server-info', (req, res) => {
 			res_obj.msg = "app list is empty"
 			res.send(JSON.stringify(res_obj));
 		} else {
-			res.header("Access-Control-Allow-Origin", "*");
-			res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-			res.header("Content-Type", "application/json;charset=UTF-8");
+
 			try {
 				LogService.getSysLog(app_name, limit, (err, logs) => {
 					var data = []
@@ -184,18 +220,41 @@ router.get('/server-info', (req, res) => {
 	}
 });
 
+router.get('/api-time', (req, res) => {
+	var res_obj = {},
+		app_name = req.query.app_name,
+		limit = req.query.limit * 1 || 1;
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header("Content-Type", "application/json;charset=UTF-8");
+	if (!app_name) {
+		res_obj.retcode = 2;
+		res_obj.msg = "no app name"
+		res.send(JSON.stringify(res_obj));
+	} else if (!app_api_time[app_name] || Object.keys(app_api_time[app_name]).length === 0) {
+		res_obj.retcode = 1;
+		res_obj.msg = "no api path";
+		res.send(JSON.stringify(res_obj));
+	} else {
+		res_obj.retcode = 0;
+		res_obj.msg = "success";
+		res_obj.data = app_api_time[app_name];
+		res.send(JSON.stringify(res_obj));
+	}
+});
+
 router.get('/test-info', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 5;
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header("Content-Type", "application/json;charset=UTF-8");
 	if (!app_name) {
 		res_obj.retcode = 2;
 		res_obj.msg = "no app name"
 		res.send(JSON.stringify(res_obj));
 	} else {
-		res.header("Access-Control-Allow-Origin", "*");
-		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-		res.header("Content-Type", "application/json;charset=UTF-8");
 		try {
 			LogService.getSysLog(app_name, limit, (err, logs) => {
 				var data = []
@@ -238,14 +297,14 @@ router.get('/catch-err', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 5;
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header("Content-Type", "application/json;charset=UTF-8");
 	if (!app_name) {
 		res_obj.retcode = 2;
 		res_obj.msg = "no app name"
 		res.send(JSON.stringify(res_obj));
 	} else {
-		res.header("Access-Control-Allow-Origin", "*");
-		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-		res.header("Content-Type", "application/json;charset=UTF-8");
 		try {
 			var data = [];
 			LogService.getErrLog(app_name, limit, (err, logs) => {

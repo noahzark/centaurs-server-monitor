@@ -109,6 +109,21 @@ module.exports.getUsageLog = (app_name, limit, callback) => {
 }
 
 /**
+ * get app time usage log from db
+ * @param {string} app_name 
+ * @param {string} api_path 
+ * @param {number} limit 
+ * @param {function} callback 
+ */
+module.exports.getApiUsageLog = (app_name, api_path, limit, callback) => {
+	if (app_name) {
+		var query = { 'app_name': app_name, "api_path": api_path };
+		var sort = { 'createdAt': -1 };
+		UsageLog.find(query).sort(sort).limit(limit).exec(callback);
+	}
+}
+
+/**
  * update app list. if the app log does not exist, create a new one
  * @param {Object} app - app, include name and status
  * @param {Function} callback 
@@ -145,3 +160,5 @@ module.exports.getApp = (app_name, callback) => {
 		Applist.findOne(query).exec(callback);
 	}
 }
+
+
