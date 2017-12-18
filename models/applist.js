@@ -1,5 +1,5 @@
 /**
- * @file centaurs-server-monitor: Uncaught Exception Log Schema
+ * @file centaurs-server-monitor: APP List
  * @copyright Centaurs Technologies Co. 2017
  * @author Zhang, Yuancheng
  * @license Unlicense
