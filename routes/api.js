@@ -28,27 +28,45 @@ if (config.has('time_interval_limit')) {
 	time_interval_limit = config.get('time_interval_limit');
 }
 
-var updateApplistCache = () => {
+var updateApplistCache = (next) => {
 	LogService.getApplist((err, list) => {
 		if (err) {
 			console.log(`[MongoDB][ERR][getApplist] ${err}`);
 		} else {
-			app_list = list;
-			console.log(`[Cache][MSG] app_list is updated`);
+			for (var i = 0; i < list.length; ++i) {
+				app_list[i] = list[i].name;
+			}
+			// console.log(`[Cache][MSG] app_list is updated`);
+			if (next) {
+				next();
+			}
 		}
 	});
 }
 
 var sysCheckTime = (app_check_interval) => {
+	updateApplistCache(() => {
+		// make every app status offline
+		for (var i = 0; i < app_list.length; ++i) {
+			var app_name = app_list[i];
+			LogService.updateApplist(
+				{
+					name: app_name,
+					status: 'offline'
+				}, (err) => {
+					if (err) {
+						console.log(`[MongoDB][ERR][updateApplist] ${err}`);
+					}
+				}
+			);
+			console.log(`[Init][MSG] init ${app_name} offline`);
+		}
+	});
+
+	// load app list
 	var check = () => {
 		var now = Date.now();
-		LogService.getApplist((err, list) => {
-			if (err) {
-				console.log(`[MongoDB][ERR][getApplist] ${err}`);
-			} else {
-				app_list = list;
-			}
-		});
+		updateApplistCache();
 		for (const app_name in app_check_time_list) {
 			if (app_name && now - app_check_time_list[app_name] > time_interval_limit) {
 				var time = new Date(app_check_time_list[app_name]);
@@ -100,12 +118,21 @@ router.get('/applist', (req, res) => {
 	if (app_list.length < 1) {
 		res_obj.retcode = 2;
 		res_obj.msg = "app list is empty"
+		res.send(JSON.stringify(res_obj));
 	} else {
-		res_obj.retcode = 0;
-		res_obj.msg = "success";
-		res_obj.data = app_list;
+		LogService.getApplist((err, list) => {
+			if (err) {
+				console.log(`[MongoDB][ERR][getApplist] ${err}`);
+				res_obj.retcode = 1;
+				res_obj.msg = `database err ${err}`;
+			} else {
+				res_obj.retcode = 0;
+				res_obj.msg = "success";
+				res_obj.data = list;
+			}
+			res.send(JSON.stringify(res_obj));
+		});
 	}
-	res.send(JSON.stringify(res_obj));
 })
 
 router.get('/server-info', (req, res) => {
@@ -181,10 +208,10 @@ router.get('/test-info', (req, res) => {
 						} else {
 							for (var i = 0; i < logs.length; i++) {
 								if (logs[i]) {
-                                    var tmp = {};
+									var tmp = {};
 									tmp.time = logs[i].createdAt;
 									tmp.msg = logs[i].msg;
-                                    data.push(tmp);
+									data.push(tmp);
 								} else {
 									break;
 								}
@@ -220,26 +247,27 @@ router.get('/catch-err', (req, res) => {
 		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		res.header("Content-Type", "application/json;charset=UTF-8");
 		try {
+			var data = [];
 			LogService.getErrLog(app_name, limit, (err, logs) => {
-                if (err) {
-                    console.log(`[MongoDB][ERR][getErrLog] ${err}`);
-                } else {
-                    for (var i = 0; i < logs.length; i++) {
-                        if (logs[i]) {
-                            var tmp = {};
-                            tmp.time = logs[i].createdAt;
-                            tmp.err = logs[i].err;
-                            data.push(tmp);
-                        } else {
-                            break;
-                        }
-                    }
-                    res_obj.retcode = 0;
-                    res_obj.msg = "success";
-                    res_obj.data = data;
-                    res.send(JSON.stringify(res_obj));
-                }
-            });
+				if (err) {
+					console.log(`[MongoDB][ERR][getErrLog] ${err}`);
+				} else {
+					for (var i = 0; i < logs.length; i++) {
+						if (logs[i]) {
+							var tmp = {};
+							tmp.time = logs[i].createdAt;
+							tmp.err = logs[i].err;
+							data.push(tmp);
+						} else {
+							break;
+						}
+					}
+					res_obj.retcode = 0;
+					res_obj.msg = "success";
+					res_obj.data = data;
+					res.send(JSON.stringify(res_obj));
+				}
+			});
 		} catch (err) {
 			console.error(err);
 			res_obj = {};
@@ -309,9 +337,6 @@ router.post('/test-info', function (req, res, err) {
 				}
 			}
 		);
-		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
-			app_list.push(info.app_name);
-		}
 		LogService.addTestLog(info, (err) => {
 			var res_obj = {};
 			if (err) {
@@ -350,9 +375,6 @@ router.post('/catch-err', function (req, res, err) {
 				}
 			}
 		);
-		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
-			app_list.push(info.app_name);
-		}
 		LogService.addErrLog(info, (err) => {
 			var res_obj = {};
 			if (err) {
@@ -391,9 +413,6 @@ router.post('/api-time', function (req, res, err) {
 				}
 			}
 		);
-		if (info.app_name && app_list.indexOf(info.app_name) < 0) {
-			app_list.push(info.app_name);
-		}
 		LogService.addUsageLog(info, (err) => {
 			var res_obj = {};
 			if (err) {
