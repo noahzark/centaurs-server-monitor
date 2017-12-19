@@ -215,7 +215,7 @@ $().ready(function () {
 			type: 'GET',
 			success: loadAppList,
 			error: function (err) {
-				console.log(`[ERR] req app list failed. ${JSON.stringify(err)}`);
+				console.log(`[ERR] request app list failed. ${JSON.stringify(err)}`);
 			}
 		});
 	}
@@ -245,6 +245,7 @@ $().ready(function () {
 				reqApiTime(app_name);
 			}
 		}
+		console.log(`[ERR] load app list failed. ${JSON.stringify(obj)}`);		
 	}
 
 	function reqSysData(app_name, limit) {
@@ -258,7 +259,7 @@ $().ready(function () {
 				loadSysData(app_name, obj);
 			},
 			error: (err) => {
-				console.log(`request ${app_name} data failed`)
+				console.log(`[ERR] request ${app_name} data failed. ${JSON.stringify(err)}`)
 			}
 		});
 	}
@@ -320,7 +321,7 @@ $().ready(function () {
 			updateSysChart(app_name, chart_data);
 			updateSrvChart(app_name, chart_data);
 		} else {
-			console.log(obj);
+			console.log(`[ERR] load ${app_name} system data failed. ${JSON.stringify(obj)}`);
 		}
 	}
 
@@ -335,7 +336,7 @@ $().ready(function () {
 				loadApiTime(app_name, obj);
 			},
 			error: (err) => {
-				console.log(`request ${app_name} api time failed. ${JSON.stringify(err)}`);
+				console.log(`[ERR] request ${app_name} api time failed. ${JSON.stringify(err)}`);
 			}
 		});
 	}
@@ -358,7 +359,7 @@ $().ready(function () {
 				data: chart_data.data
 			});
 		} else {
-			// console.log(obj);
+			console.log(`[ERR] load ${app_name} api time failed. ${JSON.stringify(obj)}`);
 		}
 	}
 
@@ -373,7 +374,7 @@ $().ready(function () {
 				loadTestData(app_name, obj);
 			},
 			error: function (err) {
-				console.log(`[ERR] req ${app_name} test data failed. ${JSON.stringify(err)}`);
+				console.log(`[ERR] request ${app_name} test data failed. ${JSON.stringify(err)}`);
 			}
 		});
 	}
@@ -397,7 +398,7 @@ $().ready(function () {
 				$(table_id).append(test_html);
 			}
 		} else {
-			console.log(`Load ${app_name} test records failed.`)
+			console.log(`[ERR] load ${app_name} test records failed. ${JSON.stringify(obj)}`)
 		}
 	}
 
@@ -412,7 +413,7 @@ $().ready(function () {
 				loadErrData(app_name, obj);
 			},
 			error: function (err) {
-				console.log(`[ERR] req ${app_name} err data failed. ${JSON.stringify(err)}`);
+				console.log(`[ERR] request ${app_name} err data failed. ${JSON.stringify(err)}`);
 			}
 		});
 	}
@@ -444,7 +445,7 @@ $().ready(function () {
 
 			}
 		} else {
-			console.log(`Load ${app_name} error records failed.`)
+			console.log(`[ERR] load ${app_name} error records failed. ${JSON.stringify(obj)}`)
 		}
 	}
 
@@ -459,7 +460,7 @@ $().ready(function () {
 				loadApiPath(app_name, obj);
 			},
 			error: function (err) {
-				console.log(`[ERR] req ${app_name} api path failed. ${JSON.stringify(err)}`);
+				console.log(`[ERR] request ${app_name} api path failed. ${JSON.stringify(err)}`);
 			}
 		});
 	}
@@ -482,7 +483,7 @@ $().ready(function () {
 			}
 
 		} else {
-			console.log(`Load ${app_name} api pathes failed.`)
+			console.log(`[ERR] load ${app_name} api pathes failed. ${JSON.stringify(obj)}`)
 		}
 	}
 
