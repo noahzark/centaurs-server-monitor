@@ -221,14 +221,16 @@ $().ready(function () {
 	}
 
 	function loadAppList(obj) {
-		if (obj && obj.retcode == 0) {
-			applist = obj.data;
+		if (obj && obj.retcode === 0) {
+			if (obj.data) {
+				app_list = obj.data;
+			}
 
-			for (var i = 0; i < applist.length; i++) {
+			for (var i = 0; i < app_list.length; i++) {
 				var tempInfoHtml = $('#info-temp').html();
 				var resObj = {},
-					app_name = applist[i].name;
-				status = applist[i].status;
+					app_name = app_list[i].name;
+				status = app_list[i].status;
 				resObj.app_name = app_name;
 				resObj.app_status = status;
 				var resHtml = tempInfoHtml.temp(resObj),
@@ -237,15 +239,21 @@ $().ready(function () {
 					$("#info").append(`<div id='${app_name}'>${resHtml}</div>`);
 					$("#navbar-app-list-items").append(`<a class="dropdown-item" href="#${app_name}">${app_name}</a>`)
 				}
+			}
+			app_list.forEach((app) => {
+				var app_name = app.name,
+				status = app.status;
+						
 				updateStatus(app_name, status);
 				reqSysData(app_name);
 				reqErrData(app_name);
 				reqTestData(app_name);
 				reqApiPath(app_name);
 				reqApiTime(app_name);
-			}
-		}
-		console.log(`[ERR] load app list failed. ${JSON.stringify(obj)}`);		
+			});
+		} else {
+			console.log(`[ERR] load app list failed. ${JSON.stringify(obj)}`);	
+		}	
 	}
 
 	function reqSysData(app_name, limit) {
