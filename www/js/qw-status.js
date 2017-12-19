@@ -209,6 +209,19 @@ $().ready(function () {
 		});
 	}
 
+	function updateApp() {
+		app_list.forEach((app) => {
+			var app_name = app.name,
+				status = app.status;
+			updateStatus(app_name, status);
+			reqSysData(app_name);
+			reqErrData(app_name);
+			reqTestData(app_name);
+			reqApiPath(app_name);
+			reqApiTime(app_name);
+		});
+	}
+
 	function reqAppList() {
 		$.ajax({
 			url: `http://${host}:${port}/api/gm/applist`,
@@ -496,6 +509,6 @@ $().ready(function () {
 	}
 
 	reqAppList();
-	setInterval(reqAppList, 30 * 1000);
-
+	// setInterval(reqAppList, 30 * 1000);nod
+	setInterval(updateApp, 10 * 1000);
 });
