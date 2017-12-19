@@ -22,14 +22,12 @@ var EmailClient = require('../services/email'),
 	mode = process.env.NODE_ENV,
 	emailClient = new EmailClient(mode);
 
-if (config.has('app_check_interval')) {
-	app_check_interval = config.get('app_check_interval');
-}
-if (config.has('time_interval_limit')) {
-	time_interval_limit = config.get('time_interval_limit');
-}
+var updateApplistCache,
+	loadAppList,
+	loadApiTime,
+	sysCheckTime;
 
-var updateApplistCache = (next) => {
+updateApplistCache = (next) => {
 	LogService.getApplist((err, list) => {
 		if (err) {
 			console.log(`[MongoDB][ERR][getApplist] ${err}`);
@@ -37,7 +35,7 @@ var updateApplistCache = (next) => {
 			for (var i = 0; i < list.length; ++i) {
 				app_list[i] = list[i].name;
 			}
-			// console.log(`[Cache][MSG] app_list is updated`);
+			console.log(`[Cache][MSG] app_list is ${JSON.stringify(app_list)}`);
 			if (next) {
 				next();
 			}
@@ -45,7 +43,19 @@ var updateApplistCache = (next) => {
 	});
 }
 
-var sysCheckTime = (app_check_interval) => {
+// initialize
+(() => {
+	// init config
+	if (config.has('app_check_interval')) {
+		app_check_interval = config.get('app_check_interval');
+	}
+	if (config.has('time_interval_limit')) {
+		time_interval_limit = config.get('time_interval_limit');
+	}
+	console.log(`[config] app_check_interval is ${app_check_interval}`);
+	console.log(`[config] time_interval_limit is ${time_interval_limit}`);
+
+	// init app statuses
 	updateApplistCache(() => {
 		// make every app status offline
 		app_list.forEach((app_name) => {
@@ -62,10 +72,34 @@ var sysCheckTime = (app_check_interval) => {
 			console.log(`[Init][MSG] init ${app_name} offline`);
 		});
 	});
+})();
 
-	// load api time 
-	var loadApiTime = () => {
-		var limit = 1;
+checkAppStatus = () => {
+	var now = Date.now();
+	updateApplistCache(() => {
+
+	});
+	for (const app_name in app_check_time_list) {
+		if (app_name && now - app_check_time_list[app_name] > time_interval_limit) {
+			var time = new Date(app_check_time_list[app_name]);
+			console.log(`[Send][Alert][Email] ${app_name} is offline at ${time.toString()}(${app_check_time_list[app_name]})`);
+			emailClient.emailLog(`[API Server Error] ${app_name}`, `${app_name} is offline at ${time.toString()}`);
+			delete app_check_time_list[app_name];
+			LogService.updateApplist({
+				name: app_name,
+				status: 'offline'
+			}, (err) => {
+				console.log(`[MongoDB][ERR][updateApplist] ${err}`);
+			})
+		}
+	}
+};
+
+// load api time 
+(loadApiTime = () => {
+	console.log(`[Cache][MSG] app_api_time is ${JSON.stringify(app_api_time)}`);
+	var limit = 1;	
+	updateApplistCache(() => {
 		app_list.forEach((app_name) => {
 			if (!app_api_time[app_name]) {
 				app_api_time[app_name] = {};
@@ -80,11 +114,15 @@ var sysCheckTime = (app_check_interval) => {
 							LogService.getApiUsageLog(app_name, path, limit, (err, api) => {
 								if (err) {
 									console.log(`[MongoDB][ERR][getApiUsageLog] ${err}`);
-								} else if (api.length > 0) {
-									var api_path = api[0].api_path;
-									app_api_time[app_name][api_path] = [];
-									for (var i = 0; i < api.length; i++) {
-										app_api_time[app_name][api_path].push(api[i].time);
+								} else {
+									if (api.length > 0) {
+										var api_path = api[0].api_path;
+										if (!app_api_time[app_name][api_path]) {
+											app_api_time[app_name][api_path] = [];
+										}
+										for (var i = 0; i < api.length; i++) {
+											app_api_time[app_name][api_path].push(api[i].time);
+										}
 									}
 								}
 							});
@@ -93,34 +131,13 @@ var sysCheckTime = (app_check_interval) => {
 				}
 			});
 		});
-	}
+	});
+})();
 
-	// load app list
-	var loadAppList = () => {
-		var now = Date.now();
-		updateApplistCache();
-		for (const app_name in app_check_time_list) {
-			if (app_name && now - app_check_time_list[app_name] > time_interval_limit) {
-				var time = new Date(app_check_time_list[app_name]);
-				console.log(`[Send][Alert][Email] ${app_name} is offline at ${time.toString()}(${app_check_time_list[app_name]})`);
-				emailClient.emailLog(`[API Server Error] ${app_name}`, `${app_name} is offline at ${time.toString()}`);
-				delete app_check_time_list[app_name];
-				LogService.updateApplist({
-					name: app_name,
-					status: 'offline'
-				}, (err) => {
-					console.log(`[MongoDB][ERR][updateApplist] ${err}`);
-				})
-			}
-		}
-	};
-	loadAppList();
-	loadApiTime();
-	setInterval(loadAppList, app_check_interval);
+(sysCheckTime = (app_check_interval) => {
+	setInterval(checkAppStatus, app_check_interval);
 	setInterval(loadApiTime, app_check_interval);
-}
-
-sysCheckTime();
+});
 
 
 router.get('/server', function (req, res) {
@@ -226,6 +243,7 @@ router.get('/api-time', (req, res) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
+
 	if (!app_name) {
 		res_obj.retcode = 2;
 		res_obj.msg = "no app name"
