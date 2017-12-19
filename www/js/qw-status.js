@@ -496,6 +496,6 @@ $().ready(function () {
 	}
 
 	reqAppList();
-	setInterval(reqAppList, 10 * 1000);
+	setInterval(reqAppList, 30 * 1000);
 
 });
