@@ -253,19 +253,9 @@ $().ready(function () {
 					$("#navbar-app-list-items").append(`<a class="dropdown-item" href="#${app_name}">${app_name}</a>`)
 				}
 			}
-			app_list.forEach((app) => {
-				var app_name = app.name,
-					status = app.status;
-				updateStatus(app_name, status);
-				reqSysData(app_name);
-				reqErrData(app_name);
-				reqTestData(app_name);
-				reqApiPath(app_name);
-				reqApiTime(app_name);
-			});
 		} else {
-			console.log(`[ERR] load app list failed. ${JSON.stringify(obj)}`);	
-		}	
+			console.log(`[ERR] load app list failed. ${JSON.stringify(obj)}`);
+		}
 	}
 
 	function reqSysData(app_name, limit) {
