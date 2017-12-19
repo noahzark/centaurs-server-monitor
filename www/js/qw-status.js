@@ -209,7 +209,7 @@ $().ready(function () {
 		});
 	}
 
-	function updateApp() {
+	function updateAllApp() {
 		app_list.forEach((app) => {
 			var app_name = app.name,
 				status = app.status;
@@ -498,6 +498,5 @@ $().ready(function () {
 	}
 
 	reqAppList();
-	// setInterval(reqAppList, 30 * 1000);nod
-	setInterval(updateApp, 10 * 1000);
+	setInterval(updateAllApp, 10 * 1000);
 });
