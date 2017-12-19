@@ -249,7 +249,7 @@ $().ready(function () {
 				var resHtml = tempInfoHtml.temp(resObj),
 					myElem = document.getElementById(app_name);
 				if (myElem === null) {
-					$("#info").append(`<div id='${app_name} class='app-item'>${resHtml}</div>`);
+					$("#info").append(`<div id='${app_name}' class='app-item'>${resHtml}</div>`);
 					$("#navbar-app-list-items").append(`<a class="dropdown-item" href="#${app_name}">${app_name}</a>`)
 				}
 			}
