@@ -529,12 +529,12 @@ $().ready(() => {
 	reqAppList();
 
 	$('#btn-left').click(() => {
-		++index;
+		--index;
 		showApp();
 	});
 
 	$('#btn-right').click(() => {
-		--index;
+		++index;
 		showApp();
 	});
 
