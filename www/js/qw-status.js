@@ -513,10 +513,7 @@ $().ready(() => {
 		}
 	}
 
-	function showApp(i) {
-		if (i) {
-			index = i;
-		}
+	function showApp() {
 		if (app_list.length > 0) {
 			// console.log(index);
 			index = Math.abs(index) % app_list.length;
@@ -533,12 +530,12 @@ $().ready(() => {
 
 	$('#btn-left').click(() => {
 		++index;
-		showApp(index);
+		showApp();
 	});
 
 	$('#btn-right').click(() => {
 		--index;
-		showApp(index);
+		showApp();
 	});
 
 	function initEventListener() {
