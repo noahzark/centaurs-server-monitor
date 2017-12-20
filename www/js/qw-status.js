@@ -251,7 +251,7 @@ $().ready(() => {
 					myElem = document.getElementById(app_name);
 				if (myElem === null) {
 					$("#info").append(`<div id='${app_name}' class='app-item'>${resHtml}</div>`);
-					$("#navbar-app-list-items").append(`<a class="dropdown-item" id="nav-${app_name}" idx="${i}">${app_name}</a>`)
+					$("#navbar-app-list-items").append(`<span class="dropdown-item" id="nav-${app_name}" idx="${i}">${app_name}</span>`)
 				}
 			}
 			showApp();
@@ -545,7 +545,7 @@ $().ready(() => {
 		app_list.forEach((app) => {
 			var app_name = app.name,
 				status = app.status;
-			$(`a#nav-${app_name}`).click(() => {
+			$(`span#nav-${app_name}`).click(() => {
 				app_id = `#${app_name}`;
 				$('.app-item').hide();
 				$(app_id).show();
