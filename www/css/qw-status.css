@@ -1,0 +1,30 @@
+.arrow {
+	display: inline-block;
+    position: fixed;
+    z-index: 10;
+	color: rgba(128, 128, 128, 0.1);
+	font-weight: 100;
+    top: 10vh;
+    font-size: 8rem;
+	height: 80vh;
+	line-height: 80vh;
+	vertical-align: middle;
+    -webkit-transition: color 0.3s ease-out;
+    -moz-transition: color 0.3s ease-out;
+    -o-transition: color 0.3s ease-out;
+	transition: color 0.3s ease-out;
+}
+
+.arrow:hover {
+    color: rgba(63, 81, 181, 0.6);
+    cursor: pointer;
+}
+
+#btn-left {
+    left: 0;
+    z-index: 10;
+}
+
+#btn-right {
+    right: 0;
+}
