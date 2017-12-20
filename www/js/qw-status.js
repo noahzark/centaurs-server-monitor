@@ -1,9 +1,10 @@
-$().ready(function () {
+$().ready(() => {
 
 	var host = '47.88.77.157',
 	// var host = 'localhost',
 		port = '10021',
-		app_list = [];
+		app_list = [],
+		index = 0;
 
 	function updateApiChart(app_name, chart_data) {
 		var ctxB = document.getElementById(`${app_name}-api-time-chart`).getContext('2d'),
@@ -250,9 +251,11 @@ $().ready(function () {
 					myElem = document.getElementById(app_name);
 				if (myElem === null) {
 					$("#info").append(`<div id='${app_name}' class='app-item'>${resHtml}</div>`);
-					$("#navbar-app-list-items").append(`<a class="dropdown-item" href="#${app_name}">${app_name}</a>`)
+					$("#navbar-app-list-items").append(`<a class="dropdown-item" id="nav-${app_name}" idx="${i}">${app_name}</a>`)
 				}
 			}
+			showApp();
+			initEventListener();
 		} else {
 			console.log(`[ERR] load app list failed. ${JSON.stringify(obj)}`);
 		}
@@ -497,6 +500,54 @@ $().ready(function () {
 		}
 	}
 
+	function updateApp(app_name) {
+		if (app_name) {
+			reqSysData(app_name);
+			reqErrData(app_name);
+			reqTestData(app_name);
+			reqApiPath(app_name);
+			reqApiTime(app_name);
+		}
+	}
+
+	function showApp(i) {
+		if (i) {
+			index = i;
+		}
+		if (app_list.length > 0) {
+			// console.log(index);
+			index = Math.abs(index) % app_list.length;
+			app_name = app_list[index].name;
+			app_id = `#${app_name}`;
+			$('.app-item').hide();
+			$(app_id).show();
+			updateApp(app_name);
+		}
+	}
+
 	reqAppList();
-	setInterval(updateAllApp, 10 * 1000);
+
+	$('#btn-left').click(() => {
+		++index;
+		showApp(index);
+	});
+
+	$('#btn-right').click(() => {
+		--index;
+		showApp(index);
+	});
+
+	function initEventListener() {
+		app_list.forEach((app) => {
+			var app_name = app.name;
+			$(`a#nav-${app_name}`).click(() => {
+				app_id = `#${app_name}`;
+				$('.app-item').hide();
+				$(app_id).show();
+				updateApp(app_name);
+			});
+		});
+	}
 });
+
+
