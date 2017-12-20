@@ -243,8 +243,8 @@ $().ready(() => {
 			for (var i = 0; i < app_list.length; i++) {
 				var tempInfoHtml = $('#info-temp').html();
 				var resObj = {},
-					app_name = app_list[i].name;
-				status = app_list[i].status;
+					app_name = app_list[i].name,
+					status = app_list[i].status;
 				resObj.app_name = app_name;
 				resObj.app_status = status;
 				var resHtml = tempInfoHtml.temp(resObj),
@@ -395,7 +395,7 @@ $().ready(() => {
 	function loadTestData(app_name, obj) {
 		var table_id = `#${app_name}-test-table`;
 		if (obj.retcode == 0) {
-			data = obj.data;
+			var data = obj.data;
 			$(table_id).html('');
 			for (var i = 0; i < data.length; i++) {
 				var date = data[i].time.split('T')[0],
@@ -434,7 +434,7 @@ $().ready(() => {
 	function loadErrData(app_name, obj) {
 		var table_id = `#${app_name}-error-table`;
 		if (obj.retcode == 0) {
-			data = obj.data;
+			var data = obj.data;
 			$(table_id).html('');
 			var index = 1,
 				prev_err = '';
@@ -518,8 +518,8 @@ $().ready(() => {
 			// console.log(index);
 			index = Math.abs(index) % app_list.length;
 			var app_name = app_list[index].name,
-				status = app_list[index].status;
-			app_id = `#${app_name}`;
+				status = app_list[index].status,
+				app_id = `#${app_name}`;
 			$('.app-item').hide();
 			$(app_id).show();
 			updateApp(app_name, status);
