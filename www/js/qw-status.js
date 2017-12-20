@@ -500,13 +500,16 @@ $().ready(() => {
 		}
 	}
 
-	function updateApp(app_name) {
+	function updateApp(app_name, status) {
 		if (app_name) {
 			reqSysData(app_name);
 			reqErrData(app_name);
 			reqTestData(app_name);
 			reqApiPath(app_name);
 			reqApiTime(app_name);
+			if (status) {
+				updateStatus(app_name, status);
+			}
 		}
 	}
 
@@ -517,11 +520,12 @@ $().ready(() => {
 		if (app_list.length > 0) {
 			// console.log(index);
 			index = Math.abs(index) % app_list.length;
-			app_name = app_list[index].name;
+			var app_name = app_list[index].name,
+				status = app_list[index].status;
 			app_id = `#${app_name}`;
 			$('.app-item').hide();
 			$(app_id).show();
-			updateApp(app_name);
+			updateApp(app_name, status);
 		}
 	}
 
@@ -539,12 +543,13 @@ $().ready(() => {
 
 	function initEventListener() {
 		app_list.forEach((app) => {
-			var app_name = app.name;
+			var app_name = app.name,
+				status = app.status;
 			$(`a#nav-${app_name}`).click(() => {
 				app_id = `#${app_name}`;
 				$('.app-item').hide();
 				$(app_id).show();
-				updateApp(app_name);
+				updateApp(app_name, status);
 			});
 		});
 	}
