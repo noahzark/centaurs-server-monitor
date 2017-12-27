@@ -16,12 +16,7 @@ var express = require('express'),
 	app_api_time = {},
 	app_check_time_list = {},	// app_name : next_time
 	app_check_interval = 3 * 1000,			// 1 sec dev default 
-	time_interval_limit = 30 * 1000,		// 10 sec dev default
-	whitelist = [
-		"localhost:10021",
-		"127.0.0.1:10021",
-		"47.88.77.157:10021"
-	];
+	time_interval_limit = 30 * 1000;		// 10 sec dev default
 
 var EmailClient = require('../services/email'),
 	mode = process.env.NODE_ENV,
@@ -158,25 +153,19 @@ router.get('/server', function (req, res) {
 	info.sys_sum = (os.totalmem() / 1024).toFixed()
 
 	var origin = req.headers.host;
-	if (whitelist.indexOf(origin) > -1) {
-		res.header('Access-Control-Allow-Origin', origin);
-	}
+	res.header('Access-Control-Allow-Origin', '*');	
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.header("Content-Type", "application/json;charset=UTF-8");
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Content-Type', 'application/json;charset=UTF-8');
 
 	res.send(JSON.stringify(info))
 })
 
 router.get('/applist', (req, res) => {
-	var origin = req.headers.host;
-	if (whitelist.indexOf(origin) > -1) {
-		res.header('Access-Control-Allow-Origin', origin);
-	}
+	res.header('Access-Control-Allow-Origin', '*');	
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.header("Content-Type", "application/json;charset=UTF-8");
-	console.log(origin);
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Content-Type', 'application/json;charset=UTF-8');
 	var res_obj = {};
 	if (app_list.length < 1) {
 		res_obj.retcode = 2;
@@ -203,12 +192,10 @@ router.get('/server-info', (req, res) => {
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 10;
 	var origin = req.headers.host;
-	if (whitelist.indexOf(origin) > -1) {
-		res.header('Access-Control-Allow-Origin', origin);
-	}
+	res.header('Access-Control-Allow-Origin', '*');	
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.header("Content-Type", "application/json;charset=UTF-8");
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Content-Type', 'application/json;charset=UTF-8');
 	if (!app_name) {
 		res_obj.retcode = 2;
 		res_obj.msg = "no app name"
@@ -257,12 +244,10 @@ router.get('/api-time', (req, res) => {
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 1;
 	var origin = req.headers.host;
-	if (whitelist.indexOf(origin) > -1) {
-		res.header('Access-Control-Allow-Origin', origin);
-	}
+	res.header('Access-Control-Allow-Origin', '*');	
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.header("Content-Type", "application/json;charset=UTF-8");
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Content-Type', 'application/json;charset=UTF-8');
 
 	if (!app_name) {
 		res_obj.retcode = 2;
@@ -285,12 +270,10 @@ router.get('/test-info', (req, res) => {
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 5;
 	var origin = req.headers.host;
-	if (whitelist.indexOf(origin) > -1) {
-		res.header('Access-Control-Allow-Origin', origin);
-	}
+	res.header('Access-Control-Allow-Origin', '*');	
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.header("Content-Type", "application/json;charset=UTF-8");
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Content-Type', 'application/json;charset=UTF-8');
 	if (!app_name) {
 		res_obj.retcode = 2;
 		res_obj.msg = "no app name"
@@ -339,12 +322,10 @@ router.get('/catch-err', (req, res) => {
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 5;
 	var origin = req.headers.host;
-	if (whitelist.indexOf(origin) > -1) {
-		res.header('Access-Control-Allow-Origin', origin);
-	}
+	res.header('Access-Control-Allow-Origin', '*');	
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.header("Content-Type", "application/json;charset=UTF-8");
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Content-Type', 'application/json;charset=UTF-8');
 	if (!app_name) {
 		res_obj.retcode = 2;
 		res_obj.msg = "no app name"
@@ -386,12 +367,10 @@ router.get('/api-path', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name;
 	var origin = req.headers.host;
-	if (whitelist.indexOf(origin) > -1) {
-		res.header('Access-Control-Allow-Origin', origin);
-	}
+	res.header('Access-Control-Allow-Origin', '*');	
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.header("Content-Type", "application/json;charset=UTF-8");
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Content-Type', 'application/json;charset=UTF-8');
 	if (!app_name) {
 		res_obj.retcode = 2;
 		res_obj.msg = "no app name"
