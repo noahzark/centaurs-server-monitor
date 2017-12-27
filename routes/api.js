@@ -18,10 +18,10 @@ var express = require('express'),
 	app_check_interval = 3 * 1000,			// 1 sec dev default 
 	time_interval_limit = 30 * 1000,		// 10 sec dev default
 	whitelist = [
-		"http://monitor.chewrobot.com:10021",
-		"http://localhost:10021",
-		"http://127.0.0.1:10021",
-		"http://47.88.77.157:10021"
+		"http://monitor.chewrobot.com",
+		"http://localhost",
+		"http://127.0.0.1",
+		"http://47.88.77.157"
 	];
 
 var EmailClient = require('../services/email'),
