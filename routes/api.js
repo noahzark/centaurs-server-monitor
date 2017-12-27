@@ -17,10 +17,10 @@ var express = require('express'),
 	app_check_time_list = {},	// app_name : next_time
 	app_check_interval = 3 * 1000,			// 1 sec dev default 
 	time_interval_limit = 30 * 1000,		// 10 sec dev default
-	origin = [
-		"http://monitor.chewrobot.com:10021", 
-		"http://localhost:10021", 
-		"http://127.0.0.1:10021", 
+	allowedOrigins = [
+		"http://monitor.chewrobot.com:10021",
+		"http://localhost:10021",
+		"http://127.0.0.1:10021",
 		"http://47.88.77.157:10021"
 	];
 
@@ -160,7 +160,11 @@ router.get('/server', function (req, res) {
 	info.sys_free = (os.freemem() / 1024).toFixed()
 	info.sys_sum = (os.totalmem() / 1024).toFixed()
 
-	res.header("Access-Control-Allow-Origin", origin);
+	var origin = req.headers.origin;
+	if (allowedOrigins.indexOf(origin) > -1) {
+		res.setHeader('Access-Control-Allow-Origin', origin);
+	}
+	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
 
@@ -168,7 +172,11 @@ router.get('/server', function (req, res) {
 })
 
 router.get('/applist', (req, res) => {
-	res.header("Access-Control-Allow-Origin", origin);
+	var origin = req.headers.origin;
+	if (allowedOrigins.indexOf(origin) > -1) {
+		res.setHeader('Access-Control-Allow-Origin', origin);
+	}
+	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
 	var res_obj = {};
@@ -196,7 +204,11 @@ router.get('/server-info', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 10;
-	res.header("Access-Control-Allow-Origin", origin);
+	var origin = req.headers.origin;
+	if (allowedOrigins.indexOf(origin) > -1) {
+		res.setHeader('Access-Control-Allow-Origin', origin);
+	}
+	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
 	if (!app_name) {
@@ -246,7 +258,11 @@ router.get('/api-time', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 1;
-	res.header("Access-Control-Allow-Origin", origin);
+	var origin = req.headers.origin;
+	if (allowedOrigins.indexOf(origin) > -1) {
+		res.setHeader('Access-Control-Allow-Origin', origin);
+	}
+	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
 
@@ -270,7 +286,11 @@ router.get('/test-info', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 5;
-	res.header("Access-Control-Allow-Origin", origin);
+	var origin = req.headers.origin;
+	if (allowedOrigins.indexOf(origin) > -1) {
+		res.setHeader('Access-Control-Allow-Origin', origin);
+	}
+	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
 	if (!app_name) {
@@ -320,7 +340,11 @@ router.get('/catch-err', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 5;
-	res.header("Access-Control-Allow-Origin", origin);
+	var origin = req.headers.origin;
+	if (allowedOrigins.indexOf(origin) > -1) {
+		res.setHeader('Access-Control-Allow-Origin', origin);
+	}
+	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
 	if (!app_name) {
@@ -363,7 +387,11 @@ router.get('/catch-err', (req, res) => {
 router.get('/api-path', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name;
-	res.header("Access-Control-Allow-Origin", origin);
+	var origin = req.headers.origin;
+	if (allowedOrigins.indexOf(origin) > -1) {
+		res.setHeader('Access-Control-Allow-Origin', origin);
+	}
+	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
 	if (!app_name) {
