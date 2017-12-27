@@ -18,10 +18,10 @@ var express = require('express'),
 	app_check_interval = 3 * 1000,			// 1 sec dev default 
 	time_interval_limit = 30 * 1000,		// 10 sec dev default
 	whitelist = [
-		"http://monitor.chewrobot.com",
-		"http://localhost",
-		"http://127.0.0.1",
-		"http://47.88.77.157"
+		"monitor.chewrobot.com",
+		"localhost",
+		"127.0.0.1",
+		"47.88.77.157"
 	];
 
 var EmailClient = require('../services/email'),
@@ -162,7 +162,7 @@ router.get('/server', function (req, res) {
 
 	var origin = req.headers.host;
 	if (whitelist.indexOf(origin) > -1) {
-		res.setHeader('Access-Control-Allow-Origin', origin);
+		res.header('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -174,7 +174,7 @@ router.get('/server', function (req, res) {
 router.get('/applist', (req, res) => {
 	var origin = req.headers.host;
 	if (whitelist.indexOf(origin) > -1) {
-		res.setHeader('Access-Control-Allow-Origin', origin);
+		res.header('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -206,7 +206,7 @@ router.get('/server-info', (req, res) => {
 		limit = req.query.limit * 1 || 10;
 	var origin = req.headers.host;
 	if (whitelist.indexOf(origin) > -1) {
-		res.setHeader('Access-Control-Allow-Origin', origin);
+		res.header('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -260,7 +260,7 @@ router.get('/api-time', (req, res) => {
 		limit = req.query.limit * 1 || 1;
 	var origin = req.headers.host;
 	if (whitelist.indexOf(origin) > -1) {
-		res.setHeader('Access-Control-Allow-Origin', origin);
+		res.header('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -288,7 +288,7 @@ router.get('/test-info', (req, res) => {
 		limit = req.query.limit * 1 || 5;
 	var origin = req.headers.host;
 	if (whitelist.indexOf(origin) > -1) {
-		res.setHeader('Access-Control-Allow-Origin', origin);
+		res.header('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -342,7 +342,7 @@ router.get('/catch-err', (req, res) => {
 		limit = req.query.limit * 1 || 5;
 	var origin = req.headers.host;
 	if (whitelist.indexOf(origin) > -1) {
-		res.setHeader('Access-Control-Allow-Origin', origin);
+		res.header('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -389,7 +389,7 @@ router.get('/api-path', (req, res) => {
 		app_name = req.query.app_name;
 	var origin = req.headers.host;
 	if (whitelist.indexOf(origin) > -1) {
-		res.setHeader('Access-Control-Allow-Origin', origin);
+		res.header('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
