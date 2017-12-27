@@ -82,9 +82,7 @@ updateApplistCache = (next) => {
 
 checkAppStatus = () => {
 	var now = Date.now();
-	updateApplistCache(() => {
-
-	});
+	updateApplistCache();
 	for (const app_name in app_check_time_list) {
 		if (app_name && now - app_check_time_list[app_name] > time_interval_limit) {
 			var time = new Date(app_check_time_list[app_name]);
