@@ -17,7 +17,7 @@ var express = require('express'),
 	app_check_time_list = {},	// app_name : next_time
 	app_check_interval = 3 * 1000,			// 1 sec dev default 
 	time_interval_limit = 30 * 1000,		// 10 sec dev default
-	allowedOrigins = [
+	whitelist = [
 		"http://monitor.chewrobot.com:10021",
 		"http://localhost:10021",
 		"http://127.0.0.1:10021",
@@ -145,7 +145,7 @@ checkAppStatus = () => {
 	setInterval(loadApiTime, app_check_interval);
 });
 
-
+// only for demo
 router.get('/server', function (req, res) {
 	var memUsage = util.inspect(process.memoryUsage()) + ''
 
@@ -160,8 +160,8 @@ router.get('/server', function (req, res) {
 	info.sys_free = (os.freemem() / 1024).toFixed()
 	info.sys_sum = (os.totalmem() / 1024).toFixed()
 
-	var origin = req.headers.origin;
-	if (allowedOrigins.indexOf(origin) > -1) {
+	var origin = req.headers.host;
+	if (whitelist.indexOf(origin) > -1) {
 		res.setHeader('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -172,8 +172,8 @@ router.get('/server', function (req, res) {
 })
 
 router.get('/applist', (req, res) => {
-	var origin = req.headers.origin;
-	if (allowedOrigins.indexOf(origin) > -1) {
+	var origin = req.headers.host;
+	if (whitelist.indexOf(origin) > -1) {
 		res.setHeader('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -204,8 +204,8 @@ router.get('/server-info', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 10;
-	var origin = req.headers.origin;
-	if (allowedOrigins.indexOf(origin) > -1) {
+	var origin = req.headers.host;
+	if (whitelist.indexOf(origin) > -1) {
 		res.setHeader('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -258,8 +258,8 @@ router.get('/api-time', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 1;
-	var origin = req.headers.origin;
-	if (allowedOrigins.indexOf(origin) > -1) {
+	var origin = req.headers.host;
+	if (whitelist.indexOf(origin) > -1) {
 		res.setHeader('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -286,8 +286,8 @@ router.get('/test-info', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 5;
-	var origin = req.headers.origin;
-	if (allowedOrigins.indexOf(origin) > -1) {
+	var origin = req.headers.host;
+	if (whitelist.indexOf(origin) > -1) {
 		res.setHeader('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -340,8 +340,8 @@ router.get('/catch-err', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name,
 		limit = req.query.limit * 1 || 5;
-	var origin = req.headers.origin;
-	if (allowedOrigins.indexOf(origin) > -1) {
+	var origin = req.headers.host;
+	if (whitelist.indexOf(origin) > -1) {
 		res.setHeader('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -387,8 +387,8 @@ router.get('/catch-err', (req, res) => {
 router.get('/api-path', (req, res) => {
 	var res_obj = {},
 		app_name = req.query.app_name;
-	var origin = req.headers.origin;
-	if (allowedOrigins.indexOf(origin) > -1) {
+	var origin = req.headers.host;
+	if (whitelist.indexOf(origin) > -1) {
 		res.setHeader('Access-Control-Allow-Origin', origin);
 	}
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
