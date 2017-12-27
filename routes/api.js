@@ -177,6 +177,7 @@ router.get('/applist', (req, res) => {
 	res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header("Content-Type", "application/json;charset=UTF-8");
+	console.log(origin);
 	var res_obj = {};
 	if (app_list.length < 1) {
 		res_obj.retcode = 2;
