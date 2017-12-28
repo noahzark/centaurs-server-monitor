@@ -482,14 +482,18 @@ $().ready(() => {
 		var id = `#${app_name}-api-time`,
 			id_r = `#${app_name}-api-paths`,
 			obj = JSON.parse(obj);
-
+		console.log(obj);
 		if (obj.retcode == 0) {
 			var paths = obj.data;
 			if (paths && paths.length > 0) {
 				$(id).removeClass('collapse');
 				$(id_r).html('');
 				for (var i = 0; i < paths.length; i++) {
-					$(id_r).append(`<h5>${paths[i]}</h5><hr>`);
+					$(id_r).append(
+						`<tr>
+						<th scope="row">${i + 1}</th>
+						<td>${paths[i]}</td>
+						</tr>`);
 				}
 			} else {
 				$(id).addClass('collapse');
