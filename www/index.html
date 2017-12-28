@@ -1,10 +1,84 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <meta http-equiv="refresh" content="0; url=status3.html"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Monitor Server Dashboard</title>
+    <meta http-equiv="refresh" content="0; url=status3.html"/>    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet">
+    <!-- Custom styles -->
+
+    <style>
+        .container h3 {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .loader {
+            border: 1rem solid #f3f3f3;
+            /* Light grey */
+            border-top: 1rem solid #3498db;
+            /* Blue */
+            border-radius: 50%;
+            width: 7.5rem;
+            height: 7.5rem;
+            animation: spin 1s linear infinite;
+            margin: 35vh auto 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
-    Hi, this monitor server. <br>
-    Loading status page...
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark indigo fixed-top">
+            <a class="navbar-brand" href="#">Monitor Server</a>
+        </nav>
+    </header>
+
+    <main class="my-5">
+            <div class="container">
+            <div class="loader mb-5"></div>
+            <h3>Loading Status...</h3>
+        </div>
+    </main>
+
+    <footer class="page-footer blue center-on-small-only unique-color-dark pt-0 fixed-bottom">
+        <div class="footer-copyright">
+            <div class="container-fluid">
+                © 2017
+                <a href="https://www.centaurstech.com/"> Centaurs Technologies Co. Ltd </a>
+                All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="js/mdb.min.js"></script>
+    <!-- Custom JavaScript -->
 </body>
+
+</html>
