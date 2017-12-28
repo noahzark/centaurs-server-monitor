@@ -479,10 +479,12 @@ $().ready(() => {
 	}
 
 	function loadApiPath(app_name, obj) {
-		var id = `#${app_name}-api-time`,
-			id_r = `#${app_name}-api-paths`,
-			obj = JSON.parse(obj);
 		console.log(obj);
+		var id = `#${app_name}-api-time`,
+			id_r = `#${app_name}-api-paths`;
+		if (typeof(obj) != 'object') {
+			obj = JSON.parse(obj);
+		}
 		if (obj.retcode == 0) {
 			var paths = obj.data;
 			if (paths && paths.length > 0) {
