@@ -161,6 +161,51 @@
 					</div>
 				</section>
 			</div>
+
+			<div id="dashboard">
+				<br>
+				<br>
+				<h1>Dashboard</h1>
+				<hr>
+				<section>
+					<h3>Summary</h3>
+					<div class="row">
+						<div class="col-md-6 mb-4">
+							<canvas id="dashboard-status-chart"></canvas>
+						</div>
+						<div class="col-md-6 mb-4">
+							<h5>Total:
+								<span class="mx-1" id="dashboard-app-total"></span>
+							</h5>
+							<hr>
+							<h5>Running:
+								<span class="mx-1" id="dashboard-app-running"></span>
+							</h5>
+							<hr>
+							<h5>Idle:
+								<span class="mx-1" id="dashboard-app-idle"></span>
+							</h5>
+							<hr>
+							<h5>Operation Rate %:
+								<span class="mx-1" id="dashboard-app-operation-rate"></span>
+							</h5>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3>Status</h3>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>APP Name</th>
+								<th>Time</th>
+							</tr>
+						</thead>
+						<tbody id='dashboard-app-table'></tbody>
+					</table>
+				</section>
+			</div>
 		</div>
 	</main>
 

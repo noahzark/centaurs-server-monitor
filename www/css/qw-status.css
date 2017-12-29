@@ -28,3 +28,9 @@
 #btn-right {
     right: 0;
 }
+
+#dashboard-status-chart {
+    max-height: 300px;
+    max-width: 300px;
+    margin: 0 auto;
+}

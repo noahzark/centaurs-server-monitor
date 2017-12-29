@@ -190,6 +190,29 @@ $().ready(() => {
 		percent.innerHTML = data.srv_percent + ' %';
 	}
 
+	function updateSummaryStatusChart(data) {
+			//pie
+	var ctxP = document.getElementById("dashboard-status-chart").getContext('2d');
+	var myPieChart = new Chart(ctxP, {
+		type: 'pie',
+		data: {
+			labels: ["Idle", "Running"],
+			datasets: [
+				{
+					data: data,
+					backgroundColor: ["#F7464A", "#46BFBD"],
+					hoverBackgroundColor: ["#FF5A5E", "#5AD3D1"]
+				}
+			]
+		},
+		options: {
+			responsive: true
+		}
+	});
+	}
+
+
+
 	function updateStatus(app_name, status) {
 		id = `#${app_name}-status`;
 		$(id).removeClass('red green');
@@ -240,7 +263,6 @@ $().ready(() => {
 			if (obj.data) {
 				app_list = obj.data;
 			}
-
 			for (var i = 0; i < app_list.length; i++) {
 				var tempInfoHtml = $('#info-temp').html();
 				var resObj = {},
@@ -257,9 +279,36 @@ $().ready(() => {
 			}
 			showApp();
 			initEventListener();
+			loadSummaryAppList();
 		} else {
 			console.log(`[ERR] load app list failed. ${JSON.stringify(obj)}`);
 		}
+	}
+
+	function loadSummaryAppList() {
+		var total = app_list.length,
+		idle = 0;
+		for (var i = 0; i < total; i++) {
+			$('#dashboard-app-table').append(
+				`<tr>
+				<th scope="row">${i + 1}</th>
+				<td>${app_list[i].name}</td>
+				<td>${app_list[i].status}</td>
+				</tr>`);
+
+			if (app_list[i].status != 'running') {
+				idle++;
+			}
+		}
+		updateSummary(total, idle);
+		updateSummaryStatusChart([idle, total-idle])		
+	}
+
+	function updateSummary(total, idle) {
+		$('#dashboard-app-total').html(total);
+		$('#dashboard-app-running').html(total - idle);
+		$('#dashboard-app-idle').html(idle);
+		$('#dashboard-app-operation-rate').html(Math.round(10000 - idle / total * 10000) / 100 + '%');
 	}
 
 	function reqSysData(app_name, limit) {
