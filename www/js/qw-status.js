@@ -1,7 +1,7 @@
 $().ready(() => {
 
 	var host = '47.88.77.157',
-	// var host = 'localhost',
+		// var host = 'localhost',
 		port = '10021',
 		app_list = [],
 		index = 0;
@@ -49,7 +49,8 @@ $().ready(() => {
 				scales: {
 					yAxes: [{
 						ticks: {
-							beginAtZero: true
+							beginAtZero: true,
+							stepSize: 1,
 						}
 					}]
 				}
@@ -218,7 +219,7 @@ $().ready(() => {
 			reqSysData(app_name);
 			reqErrData(app_name);
 			reqTestData(app_name);
-			reqApiPath(app_name);
+			// reqApiPath(app_name);
 			reqApiTime(app_name);
 		});
 	}
@@ -339,6 +340,9 @@ $().ready(() => {
 	}
 
 	function reqApiTime(app_name, limit) {
+		if (!app_name) {
+			return;
+		}
 		if (!limit) {
 			limit = 1;
 		}
@@ -355,23 +359,42 @@ $().ready(() => {
 	}
 
 	function loadApiTime(app_name, obj) {
+		var id = `#${app_name}-api-time-chart`
+		id_r = `#${app_name}-api-paths`,
+			i = 1;
 		if (obj && obj.retcode == 0) {
 			var data = obj.data,
 				chart_data = {};
 
 			chart_data.labels = [];
 			chart_data.data = [];
-
+			$(id).removeClass('collapse');
+			$(id_r).html('');
 			for (const prop in data) {
-				chart_data.labels.push(prop);
-				chart_data.data.push(data[prop][0]);
+				$(id_r).append(
+					`<tr>
+					<th scope="row">${i}</th>
+					<td>${prop}</td>
+					<td>${data[prop][0]}</td>
+					</tr>`);
+				i++;
+				if (data[prop][0]) {
+					var label = prop.split('?')[0];
+					chart_data.labels.push(label);
+					chart_data.data.push(data[prop][0]);
+				}
+			}
+			if (chart_data.labels.length > 0) {
+				updateApiChart(app_name, {
+					labels: chart_data.labels,
+					data: chart_data.data
+				});
+			} else {
+				$(id).addClass('collapse');
 			}
 
-			updateApiChart(app_name, {
-				labels: chart_data.labels,
-				data: chart_data.data
-			});
 		} else {
+			$(id).addClass('collapse');
 			console.log(`[ERR] load ${app_name} api time failed. ${JSON.stringify(obj)}`);
 		}
 	}
@@ -455,7 +478,6 @@ $().ready(() => {
 					index++;
 					prev_err = err;
 				}
-
 			}
 		} else {
 			console.log(`[ERR] load ${app_name} error records failed. ${JSON.stringify(obj)}`)
@@ -479,10 +501,9 @@ $().ready(() => {
 	}
 
 	function loadApiPath(app_name, obj) {
-		console.log(obj);
 		var id = `#${app_name}-api-time`,
 			id_r = `#${app_name}-api-paths`;
-		if (typeof(obj) != 'object') {
+		if (typeof (obj) != 'object') {
 			obj = JSON.parse(obj);
 		}
 		if (obj.retcode == 0) {
@@ -500,7 +521,6 @@ $().ready(() => {
 			} else {
 				$(id).addClass('collapse');
 			}
-
 		} else {
 			console.log(`[ERR] load ${app_name} api pathes failed. ${JSON.stringify(obj)}`)
 		}
@@ -511,7 +531,7 @@ $().ready(() => {
 			reqSysData(app_name);
 			reqErrData(app_name);
 			reqTestData(app_name);
-			reqApiPath(app_name);
+			// reqApiPath(app_name);
 			reqApiTime(app_name);
 			if (status) {
 				updateStatus(app_name, status);
@@ -557,5 +577,3 @@ $().ready(() => {
 		});
 	}
 });
-
-
