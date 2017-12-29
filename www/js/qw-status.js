@@ -274,10 +274,10 @@ $().ready(() => {
 					myElem = document.getElementById(app_name);
 				if (myElem === null) {
 					$("#info").append(`<div id='${app_name}' class='app-item'>${resHtml}</div>`);
-					$("#navbar-app-list-items").append(`<span class="dropdown-item" id="nav-${app_name}" idx="${i}">${app_name}</span>`)
+					$("#navbar-app-list-items").append(`<span class="dropdown-item" id="nav-${app_name}" idx="${i+1}">${app_name}</span>`)
 				}
 			}
-			showApp();
+			showDashboard();
 			initEventListener();
 			loadSummaryAppList();
 		} else {
@@ -601,6 +601,11 @@ $().ready(() => {
 		}
 	}
 
+	function showDashboard() {
+		$('.app-item').hide();
+		$('#dashboard').show();
+	}
+
 	reqAppList();
 
 	$('#btn-left').click(() => {
@@ -611,6 +616,11 @@ $().ready(() => {
 	$('#btn-right').click(() => {
 		++index;
 		showApp();
+	});
+
+	$('#navbar-summary').click(() => {
+		index = 0;
+		showDashboard();
 	});
 
 	function initEventListener() {

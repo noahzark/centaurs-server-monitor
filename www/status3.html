@@ -33,6 +33,9 @@
 				<!-- Links -->
 				<ul class="navbar-nav mr-auto">
 					<!-- Dropdown -->
+					<li class="nav-item">
+							<a class="nav-link" id="navbar-summary">Summary</a>
+						</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" id="navbar-app-list-head" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">App List</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbar-app-list-head" id="navbar-app-list-items">
@@ -54,6 +57,50 @@
 		</div>
 
 		<div class="container" id="info">
+				<div id="dashboard" class="app-item">
+						<br>
+						<br>
+						<h1>Dashboard</h1>
+						<hr>
+						<section>
+							<h3>Summary</h3>
+							<div class="row">
+								<div class="col-md-6 mb-4">
+									<canvas id="dashboard-status-chart"></canvas>
+								</div>
+								<div class="col-md-6 mb-4">
+									<h5>Total:
+										<span class="mx-1" id="dashboard-app-total"></span>
+									</h5>
+									<hr>
+									<h5>Running:
+										<span class="mx-1" id="dashboard-app-running"></span>
+									</h5>
+									<hr>
+									<h5>Idle:
+										<span class="mx-1" id="dashboard-app-idle"></span>
+									</h5>
+									<hr>
+									<h5>Operation Rate %:
+										<span class="mx-1" id="dashboard-app-operation-rate"></span>
+									</h5>
+								</div>
+							</div>
+						</section>
+						<section>
+							<h3>Status</h3>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>APP Name</th>
+										<th>Time</th>
+									</tr>
+								</thead>
+								<tbody id='dashboard-app-table'></tbody>
+							</table>
+						</section>
+					</div>
 			<div id="info-temp" hidden>
 				<br>
 				<br>
@@ -159,51 +206,6 @@
 							<tbody id='$app_name$-api-paths'></tbody>
 						</table>
 					</div>
-				</section>
-			</div>
-
-			<div id="dashboard">
-				<br>
-				<br>
-				<h1>Dashboard</h1>
-				<hr>
-				<section>
-					<h3>Summary</h3>
-					<div class="row">
-						<div class="col-md-6 mb-4">
-							<canvas id="dashboard-status-chart"></canvas>
-						</div>
-						<div class="col-md-6 mb-4">
-							<h5>Total:
-								<span class="mx-1" id="dashboard-app-total"></span>
-							</h5>
-							<hr>
-							<h5>Running:
-								<span class="mx-1" id="dashboard-app-running"></span>
-							</h5>
-							<hr>
-							<h5>Idle:
-								<span class="mx-1" id="dashboard-app-idle"></span>
-							</h5>
-							<hr>
-							<h5>Operation Rate %:
-								<span class="mx-1" id="dashboard-app-operation-rate"></span>
-							</h5>
-						</div>
-					</div>
-				</section>
-				<section>
-					<h3>Status</h3>
-					<table class="table">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>APP Name</th>
-								<th>Time</th>
-							</tr>
-						</thead>
-						<tbody id='dashboard-app-table'></tbody>
-					</table>
 				</section>
 			</div>
 		</div>
