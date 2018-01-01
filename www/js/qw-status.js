@@ -4,6 +4,8 @@ $().ready(() => {
 		// var host = 'localhost',
 		port = '10021',
 		app_list = [],
+		err_list = [],
+		app_err_cnt = 0,
 		index = 0;
 
 	function updateApiChart(app_name, chart_data) {
@@ -191,24 +193,24 @@ $().ready(() => {
 	}
 
 	function updateSummaryStatusChart(data) {
-			//pie
-	var ctxP = document.getElementById("dashboard-status-chart").getContext('2d');
-	var myPieChart = new Chart(ctxP, {
-		type: 'pie',
-		data: {
-			labels: ["Idle", "Running"],
-			datasets: [
-				{
-					data: data,
-					backgroundColor: ["#F7464A", "#46BFBD"],
-					hoverBackgroundColor: ["#FF5A5E", "#5AD3D1"]
-				}
-			]
-		},
-		options: {
-			responsive: true
-		}
-	});
+		//pie
+		var ctxP = document.getElementById("dashboard-status-chart").getContext('2d');
+		var myPieChart = new Chart(ctxP, {
+			type: 'pie',
+			data: {
+				labels: ["Idle", "Running"],
+				datasets: [
+					{
+						data: data,
+						backgroundColor: ["#F7464A", "#46BFBD"],
+						hoverBackgroundColor: ["#FF5A5E", "#5AD3D1"]
+					}
+				]
+			},
+			options: {
+				responsive: true
+			}
+		});
 	}
 
 	function updateStatus(app_name, status) {
@@ -272,7 +274,7 @@ $().ready(() => {
 					myElem = document.getElementById(app_name);
 				if (myElem === null) {
 					$("#info").append(`<div id='${app_name}' class='app-item'>${resHtml}</div>`);
-					$("#navbar-app-list-items").append(`<span class="dropdown-item" id="nav-${app_name}" idx="${i+1}">${app_name}</span>`)
+					$("#navbar-app-list-items").append(`<span class="dropdown-item" id="nav-${app_name}" idx="${i + 1}">${app_name}</span>`)
 				}
 			}
 			showDashboard();
@@ -286,7 +288,7 @@ $().ready(() => {
 
 	function loadSummaryAppList() {
 		var total = app_list.length,
-		idle = 0;
+			idle = 0;
 		for (var i = 0; i < total; i++) {
 			$('#dashboard-status-table').append(
 				`<tr>
@@ -300,7 +302,7 @@ $().ready(() => {
 			}
 		}
 		updateSummary(total, idle);
-		updateSummaryStatusChart([idle, total-idle])		
+		updateSummaryStatusChart([idle, total - idle])
 	}
 
 	function updateSummary(total, idle) {
@@ -541,45 +543,57 @@ $().ready(() => {
 	}
 
 
-	function reqErrList () {
-		var table_id = '#dashboard-error-table';
-		$(table_id).html('');		
+	function reqErrList() {
+		err_list = [];
+		app_err_cnt = 0;
 		for (var i = 0; i < app_list.length; i++) {
 			reqErrData(app_list[i].name, 1, loadErrList);
 		}
 	}
 
 	function loadErrList(app_name, obj) {
+		app_err_cnt++;
 		var table_id = '#dashboard-error-table';
 		if (obj.retcode == 0) {
 			var data = obj.data;
 			if (data && data.length > 0) {
-				var index = 1,
-					prev_err = '';
-				for (var i = 0; i < data.length; i++) {
-					var date = data[i].time.split('T')[0],
-						time = data[i].time.split('T')[1].split('.')[0],
-						err = data[i].err;
-					if (prev_err != err) {
-						var err_fmt = err.replace(/\n/g, '<br>');
-						var err_html =
-							`<tr>
-						<th scope="row">${index}</th>
-						<td>${app_name}</td>
-						<td>${date}</td>
-						<td>${time}</td>
-						<td>${err_fmt}</td>
-						</tr>`;
-						$(table_id).append(err_html);
-						index++;
-						prev_err = err;
-					}
-				}
+
+				var date = data[0].time.split('T')[0],
+					time = data[0].time.split('T')[1].split('.')[0],
+					err = data[0].err;
+
+				var err_fmt = err.replace(/\n/g, '<br>');
+				var err_obj = {
+					app_name: app_name,
+					date: date,
+					time: time,
+					err_fmt: err_fmt
+				};
+				err_list.push(err_obj);
 			} else {
 				console.log(`[MSG] ${app_name} has no error record.`);
 			}
 		} else {
 			console.log(`[ERR] load ${app_name} error records failed. ${JSON.stringify(obj)}`)
+		}
+		if (app_err_cnt === app_list.length) {
+			showErrList();
+		}
+	}
+
+	function showErrList() {
+		var table_id = '#dashboard-error-table';
+		$(table_id).html('');
+		for (var i = 0; i < err_list.length; i++) {
+			var err_html =
+				`<tr>
+				<th scope="row">${i + 1}</th>
+				<td>${err_list[i].app_name}</td>
+				<td>${err_list[i].date}</td>
+				<td>${err_list[i].time}</td>
+				<td>${err_list[i].err_fmt}</td>
+				</tr>`;
+			$(table_id).append(err_html);
 		}
 	}
 
