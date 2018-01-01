@@ -211,8 +211,6 @@ $().ready(() => {
 	});
 	}
 
-
-
 	function updateStatus(app_name, status) {
 		id = `#${app_name}-status`;
 		$(id).removeClass('red green');
@@ -240,7 +238,7 @@ $().ready(() => {
 				status = app.status;
 			updateStatus(app_name, status);
 			reqSysData(app_name);
-			reqErrData(app_name);
+			reqErrData(app_name, 5, loadErrData);
 			reqTestData(app_name);
 			// reqApiPath(app_name);
 			reqApiTime(app_name);
@@ -280,6 +278,7 @@ $().ready(() => {
 			showDashboard();
 			initEventListener();
 			loadSummaryAppList();
+			reqErrList();
 		} else {
 			console.log(`[ERR] load app list failed. ${JSON.stringify(obj)}`);
 		}
@@ -289,7 +288,7 @@ $().ready(() => {
 		var total = app_list.length,
 		idle = 0;
 		for (var i = 0; i < total; i++) {
-			$('#dashboard-app-table').append(
+			$('#dashboard-status-table').append(
 				`<tr>
 				<th scope="row">${i + 1}</th>
 				<td>${app_list[i].name}</td>
@@ -487,7 +486,7 @@ $().ready(() => {
 		}
 	}
 
-	function reqErrData(app_name, limit) {
+	function reqErrData(app_name, limit, callback) {
 		if (!limit) {
 			limit = 5;
 		}
@@ -495,7 +494,11 @@ $().ready(() => {
 			url: `http://${host}:${port}/api/gm/catch-err/?app_name=${app_name}&limit=${limit}`,
 			type: 'GET',
 			success: function (obj) {
-				loadErrData(app_name, obj);
+				if (callback) {
+					callback(app_name, obj);
+				} else {
+					console.log(`[ERR] request ${app_name} err data succuss, but no callback function.`);
+				}
 			},
 			error: function (err) {
 				console.log(`[ERR] request ${app_name} err data failed. ${JSON.stringify(err)}`);
@@ -507,26 +510,73 @@ $().ready(() => {
 		var table_id = `#${app_name}-error-table`;
 		if (obj.retcode == 0) {
 			var data = obj.data;
-			$(table_id).html('');
-			var index = 1,
-				prev_err = '';
-			for (var i = 0; i < data.length; i++) {
-				var date = data[i].time.split('T')[0],
-					time = data[i].time.split('T')[1].split('.')[0],
-					err = data[i].err;
-				if (prev_err != err) {
-					var err_fmt = err.replace(/\n/g, '<br>');
-					var err_html =
-						`<tr>
-			        <th scope="row">${index}</th>
-			        <td>${date}</td>
-			        <td>${time}</td>
-			        <td>${err_fmt}</td>
-			        </tr>`;
-					$(table_id).append(err_html);
-					index++;
-					prev_err = err;
+			if (data && data.length > 0) {
+				$(table_id).html('');
+				var index = 1,
+					prev_err = '';
+				for (var i = 0; i < data.length; i++) {
+					var date = data[i].time.split('T')[0],
+						time = data[i].time.split('T')[1].split('.')[0],
+						err = data[i].err;
+					if (prev_err != err) {
+						var err_fmt = err.replace(/\n/g, '<br>');
+						var err_html =
+							`<tr>
+						<th scope="row">${index}</th>
+						<td>${date}</td>
+						<td>${time}</td>
+						<td>${err_fmt}</td>
+						</tr>`;
+						$(table_id).append(err_html);
+						index++;
+						prev_err = err;
+					}
 				}
+			} else {
+				console.log(`[MSG] ${app_name} has no error record.`);
+			}
+		} else {
+			console.log(`[ERR] load ${app_name} error records failed. ${JSON.stringify(obj)}`)
+		}
+	}
+
+
+	function reqErrList () {
+		var table_id = '#dashboard-error-table';
+		$(table_id).html('');		
+		for (var i = 0; i < app_list.length; i++) {
+			reqErrData(app_list[i].name, 1, loadErrList);
+		}
+	}
+
+	function loadErrList(app_name, obj) {
+		var table_id = '#dashboard-error-table';
+		if (obj.retcode == 0) {
+			var data = obj.data;
+			if (data && data.length > 0) {
+				var index = 1,
+					prev_err = '';
+				for (var i = 0; i < data.length; i++) {
+					var date = data[i].time.split('T')[0],
+						time = data[i].time.split('T')[1].split('.')[0],
+						err = data[i].err;
+					if (prev_err != err) {
+						var err_fmt = err.replace(/\n/g, '<br>');
+						var err_html =
+							`<tr>
+						<th scope="row">${index}</th>
+						<td>${app_name}</td>
+						<td>${date}</td>
+						<td>${time}</td>
+						<td>${err_fmt}</td>
+						</tr>`;
+						$(table_id).append(err_html);
+						index++;
+						prev_err = err;
+					}
+				}
+			} else {
+				console.log(`[MSG] ${app_name} has no error record.`);
 			}
 		} else {
 			console.log(`[ERR] load ${app_name} error records failed. ${JSON.stringify(obj)}`)
@@ -578,7 +628,7 @@ $().ready(() => {
 	function updateApp(app_name, status) {
 		if (app_name) {
 			reqSysData(app_name);
-			reqErrData(app_name);
+			reqErrData(app_name, 5, loadErrData);
 			reqTestData(app_name);
 			// reqApiPath(app_name);
 			reqApiTime(app_name);
